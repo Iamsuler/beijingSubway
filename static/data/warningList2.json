@@ -1,0 +1,51 @@
+{
+	"serialNumber": "",
+	"code": "success",
+	"message": "请求成功",
+	"page": "2",
+	"pageSize": "5",
+	"count": "5",
+	"total": "14",
+	"systemTime": "2018-08-12 13:31:09",
+	"data": [{
+		"level": "非常紧急",
+		"station": "南锣鼓巷",
+		"time": "2018-08-12 16:31:09",
+		"elevatorType": "扶梯",
+		"device": "08-NLGX-FT-Z-02",
+		"remarks": "无",
+		"status": 1
+	}, {
+		"level": "紧急",
+		"station": "南锣鼓巷",
+		"time": "2018-08-12 15:07:09",
+		"elevatorType": "扶梯",
+		"device": "08-NLGX-FT-Z-05",
+		"remarks": "无",
+		"status": 1
+	}, {
+		"level": "紧急",
+		"station": "南锣鼓巷",
+		"time": "2018-08-12 18:03:09",
+		"elevatorType": "扶梯",
+		"device": "08-NLGX-FT-Z-02",
+		"remarks": "无",
+		"status": 1
+	}, {
+		"level": "紧急",
+		"station": "南锣鼓巷",
+		"time": "2018-08-12 14:24:09",
+		"elevatorType": "直梯",
+		"device": "08-NLGX-ZT-E-01",
+		"remarks": "无",
+		"status": 1
+	}, {
+		"level": "紧急",
+		"station": "南锣鼓巷",
+		"time": "2018-08-12 09:26:09",
+		"elevatorType": "扶梯",
+		"device": "08-NLGX-FT-Z-05",
+		"remarks": "无",
+		"status": 2
+	}]
+}

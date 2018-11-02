@@ -1,0 +1,21 @@
+{
+	"serialNumber": "",
+	"code": "success",
+	"message": "请求成功",
+	"systemTime": "2018-08-12 13:31:09",
+	"data": {
+		"stations": [{
+				"name": "南锣鼓巷",
+				"ztcount": 2,
+				"ftcount": 10
+			},
+			{
+				"stationName": "鼓楼大街",
+				"ztcount": 1,
+				"ftcount": 12
+			}
+		]
+
+	}
+
+}

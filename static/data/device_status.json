@@ -1,0 +1,25 @@
+{
+	"serialNumber": "",
+	"code": "success",
+	"message": "«Î«Û≥…π¶",
+	"systemTime": "2018-08-12 13:31:09",
+	"data": {
+		"devices": [{
+			"deviceNo": "08-NLGX-FT-F-01",
+			"deviceType": 1,
+			"status": 1
+		}, {
+			"deviceNo": "08-NLGX-FT-E-02",
+			"deviceType": 1,
+			"status": 1
+		}, {
+			"deviceNo": "08-NLGX-FT-F-02",
+			"deviceType": 1,
+			"status": 1
+		}, {
+			"deviceNo": "08-NLGX-ZT-Z-01",
+			"deviceType": 2,
+			"status": 3
+		}]
+	}
+}

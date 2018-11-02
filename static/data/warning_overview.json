@@ -1,0 +1,19 @@
+{
+	"serialNumber": "",
+	"code": "success",
+	"message": "请求成功",
+	"systemTime": "2018-08-12 13:31:09",
+	"data": {
+		"lines": [{
+			"lineName": "8号线",
+			"status": 1
+		}, {
+			"lineName": "5号线",
+			"status": -1
+		}],
+		"warningCount": 1,
+		"normalCount": 1
+
+	}
+
+}

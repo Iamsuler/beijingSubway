@@ -1,0 +1,85 @@
+{
+	"serialNumber": "",
+	"code": "success",
+	"message": "请求成功",
+	"systemTime": "2018-08-12 13:31:09",
+	"data": {
+		"entrances": [{
+			"name": "E",
+			"color": "#006400",
+			"lineName": "8号线",
+			"position": 3,
+			"devices": [{
+				"deviceNo": "08-NLGX-ZT-E-01",
+				"deviceType": 2,
+				"deviceStatus": 3
+			}, {
+				"deviceNo": "08-NLGX-FT-E-01",
+				"deviceType": 1,
+				"deviceStatus": 1
+			}, {
+				"deviceNo": "08-NLGX-FT-E-02",
+				"deviceType": 1,
+				"deviceStatus": 2
+			}]
+      }, {
+			"name": "F",
+			"color": "#006400",
+			"lineName": "8号线",
+			"position": 4,
+			"devices": [{
+				"deviceNo": "08-NLGX-FT-F-01",
+				"deviceType": 1,
+				"deviceStatus": 1
+			}, {
+				"deviceNo": "08-NLGX-FT-F-02",
+				"deviceType": 1,
+				"deviceStatus": 2
+			}]
+		}],
+		"floors": [{
+			"name": "站厅~站台",
+			"devices": [{
+				"deviceNo": "08-NLGX-ZT-Z-01",
+				"deviceType": 2,
+				"deviceStatus": 3
+			}, {
+				"deviceNo": "08-NLGX-FT-Z-06",
+				"deviceType": 1,
+				"deviceStatus": 1
+			}, {
+				"deviceNo": "08-NLGX-FT-Z-01",
+				"deviceType": 1,
+				"deviceStatus": 1
+			}]
+		}, {
+			"name": "站厅~站台（左侧）",
+			"devices": [{
+				"deviceNo": "08-NLGX-FT-Z-04",
+				"deviceType": 1,
+				"deviceStatus": 1
+			}]
+		}, {
+			"name": "站厅~站台（右侧）",
+			"devices": [{
+				"deviceNo": "08-NLGX-FT-Z-05",
+				"deviceType": 1,
+				"deviceStatus": 1
+			}]
+		}, {
+			"name": "东端并梯左",
+			"devices": [{
+				"deviceNo": "08-NLGX-FT-Z-02",
+				"deviceType": 1,
+				"deviceStatus": 1
+			}]
+		}, {
+			"name": "东端并梯右",
+			"devices": [{
+				"deviceNo": "08-NLGX-FT-Z-03",
+				"deviceType": 1,
+				"deviceStatus": 1
+			}]
+		}]
+	}
+}
