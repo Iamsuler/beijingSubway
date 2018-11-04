@@ -26,7 +26,7 @@
                             </div>
                         </li>
                         <li class="search-item">
-                            <div class="search-item-title">线路：</div>
+                            <div class="search-item-title">站点：</div>
                             <div class="serach-item-label">
                                 <label><input name="station" type="radio" v-model="stationCode" value="0">全部</label>
                                 <label v-for="(item, index) in stationList" :key="index"><input name="station" type="radio"  v-model="stationCode" :value="item.stationCode">{{item.stationName}}</label>
@@ -183,8 +183,6 @@ export default {
   },
   methods: {
     init() {
-      console.log("init", this.lineCode, this.stationCode);
-
       let lineList = sessionStorage.getItem("lineList");
       if (lineList) {
         this.lineList = JSON.parse(lineList);

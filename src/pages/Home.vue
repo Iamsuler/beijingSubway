@@ -1854,9 +1854,9 @@ export default {
         this.$post('/subway/warning_overview', data).then(res => {
             if (res.code === 'success') {
                 this.lineWarning = res.data
-                res.data.lines.forEach(item => {
-                    console.log(item.lineName, item.lineCode)
-                 })
+                // res.data.lines.forEach(item => {
+                //     console.log(item.lineName, item.lineCode)
+                //  })
                 //sessionStorage.setItem('lineList', JSON.stringify(res.data.lines));
 
             } else {
@@ -1886,22 +1886,24 @@ export default {
       })
 
     },
-    svgLoaded () {
-      var that = this
-      this.timer = setInterval(function () {
-        let data = {
-            serialNumber: that.$global().serialNumber
-        }
-        that.$post('/subway/waring_stations', data).then(res => {
-            if (res.code === 'success') {
-                that.errorStationList = res.data.stations
-              
-                that.setErrorStation()
+    getWarningStations () {
+      let data = {
+          serialNumber: that.$global().serialNumber
+      }
+      this.$post('/subway/waring_stations', data).then(res => {
+        if (res.code === 'success') {
+          this.errorStationList = res.data.stations
+          this.setErrorStation()
         } else {
           alert(res.message)
         }
-        })
-
+      })
+    },
+    svgLoaded () {
+      var that = this
+      this.timer = setInterval(function () {
+        that.getWarningStations()
+        that.getWarningOverview()
       }, 120000)
       
     },
@@ -2016,10 +2018,10 @@ export default {
 
                 let isInSystem = this.isLineInSystem(code.lineCode)
 
-                if (!isInSystem) {
-                    alert(this.notInSystemMsg)
-                    return false;
-                }
+                // if (!isInSystem) {
+                //     alert(this.notInSystemMsg)
+                //     return false;
+                // }
 
                 if (isDisabled) {
                     alert('该站点暂未开通使用！')
