@@ -1888,7 +1888,7 @@ export default {
     },
     getWarningStations () {
       let data = {
-          serialNumber: that.$global().serialNumber
+          serialNumber: this.$global().serialNumber
       }
       this.$post('/subway/waring_stations', data).then(res => {
         if (res.code === 'success') {
