@@ -247,15 +247,18 @@ export default {
       this.getStationEntrances();
       this.getStationInfo();
 
-      this.timer = setInterval(() => {
-        this.getStationEntrances();
-      }, 120000);
+      this.updateStation()
     },
     updateStation() {
-      this.getWarningList();
-      this.getStationEntrances();
+      if (this.timer !== null) {
+        clearInterval(this.timer)
+        this.timer = null
+      }
+      this.timer = setInterval(() => {
+        this.getStationEntrances();
+        this.getWarningList();
+      }, 120000);
     },
-
     getWarningLine() {
       let data = {
         serialNumber: this.$global().serialNumber,

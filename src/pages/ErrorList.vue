@@ -69,6 +69,12 @@
                                 <label><input name="condition" type="radio" v-model="filterCondition" value="2">未确认</label>
                             </div>
                         </li>
+                        <li class="search-item">
+                            <div class="search-item-title"></div>
+                            <div class="serach-item-label">
+                                <button @click="filterDate">确认</button>
+                            </div>
+                        </li>
                     </ul>
                 </div>
 
@@ -177,8 +183,6 @@ export default {
     };
   },
   created() {
-    //this.lineCode = this.$route.params.lineCode || 0
-    //this.stationCode = this.$route.params.stationCode || 0
     this.init();
   },
   methods: {
@@ -237,7 +241,6 @@ export default {
         data: data
       };
       this.$post("/subway/warning_list", params).then(res => {
-        console.log(res);
         if (res.code === "success") {
           this.warningList = res.data.list;
           this.allWarningCount = res.total;
@@ -246,14 +249,8 @@ export default {
         }
       });
     },
-    pageTurning(index) {
-      this.curPage = this.curPage + index;
-
-      this.getWarningList();
-    },
     setPage(index) {
       this.curPage = index;
-
       this.getWarningList();
     },
     getStation(name, code) {
@@ -265,7 +262,6 @@ export default {
           stationName: name
         }
       });
-
       this.init();
     },
     confirmWarning(index) {
@@ -277,7 +273,6 @@ export default {
         }
       };
       this.$post("/subway/warning_confirm", params).then(res => {
-        console.log(res);
         if (res.code === "success") {
           alert("确认成功！");
           this.warningList[index].status = 1;
@@ -291,25 +286,13 @@ export default {
     },
     searchDevice() {
       this.$refs.device.showDeviceModal(this.deviceId);
-    }
-  },
-  computed: {
+    },
     filterDate() {
       this.curPage = 1;
-
-      return {
-        level: this.filterDegree,
-        timeRange: this.filterTime,
-        elevatorType: this.filterType,
-        status: this.filterCondition,
-        stationCode: this.stationCode
-      };
+      this.getWarningList();
     }
   },
   watch: {
-    filterDate() {
-      this.getWarningList();
-    },
     lineCode: function(val) {
       if (this.lineCode == 0) {
         this.stationList = [];
