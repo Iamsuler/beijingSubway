@@ -47,10 +47,16 @@
                         <li class="search-item">
                             <div class="search-item-title">时间段：</div>
                             <div class="serach-item-label">
-                                <label><input name="time" type="radio" v-model="filterTime" value="0">全部</label>
-                                <label><input name="time" type="radio" v-model="filterTime" value="1">1天内</label>
-                                <label><input name="time" type="radio" v-model="filterTime" value="3">3天内</label>
-                                <label><input name="time" type="radio" v-model="filterTime" value="7">7天内</label>
+                                <el-date-picker
+                                  v-model="filterTime"
+                                  :value-format="'yyyy-MM-dd HH:mm:ss'"
+                                  @change="dateChange"
+                                  type="datetimerange"
+                                  range-separator="至"
+                                  start-placeholder="开始日期"
+                                  :picker-options="datePickerOptions"
+                                  end-placeholder="结束日期">
+                                </el-date-picker>
                             </div>
                         </li>
                         <li class="search-item">
@@ -72,7 +78,7 @@
                         <li class="search-item">
                             <div class="search-item-title"></div>
                             <div class="serach-item-label">
-                                <button @click="filterDate">确认</button>
+                                <button class="btn" @click="filterDate">确认</button>
                             </div>
                         </li>
                     </ul>
@@ -86,6 +92,7 @@
                                 <th>优先级</th>
                                 <th class="table-time">时间</th>
                                 <th>站点</th>
+                                <th>设备编号</th>
                                 <th>设备名称</th>
                                 <th>报警信息</th>
                                 <th>工单号</th>
@@ -98,6 +105,7 @@
                                 <td class="table-time">{{item.time}}</td>
                                 <td>{{item.stationName}}</td>
                                 <td>{{item.device}}</td>
+                                <td>{{item.deviceName}}</td>
                                 <td>{{item.remarks}}</td>
                                 <td>{{item.trackID}}</td>
                                 <td>
@@ -132,9 +140,9 @@
 // components
 import Vue from "vue";
 import DeviceModal from "../components/DeviceModal.vue";
-import { Pagination } from "element-ui";
+import { Pagination, DatePicker } from "element-ui";
 
-Vue.use(Pagination);
+Vue.use(Pagination).use(DatePicker);
 
 export default {
   name: "ErrorList",
@@ -157,7 +165,9 @@ export default {
 
       // 筛选
       filterDegree: 0,
-      filterTime: 0,
+      filterTime: '',
+      startTime: '',
+      endTime: '',
       filterType: 0,
       filterCondition: 0,
       lineList: [],
@@ -179,7 +189,39 @@ export default {
         "趋势报警",
         "初始报警",
         "设备故障报警"
-      ]
+      ],
+      warningTimer: null,
+      datePickerOptions: {
+        disabledDate (time) {
+          return time.getTime() > Date.now() - 8.64e6
+        },
+        shortcuts: [{
+            text: '最近一天',
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
+                picker.$emit('pick', [start, end]);
+              }
+            }, {
+            text: '最近三天',
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 3);
+                picker.$emit('pick', [start, end]);
+              }
+            }, {
+            text: '最近一周',
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                picker.$emit('pick', [start, end]);
+              }
+            }
+          ]
+      }
     };
   },
   created() {
@@ -198,7 +240,7 @@ export default {
         this.getStationList();
       }
 
-      this.getWarningList();
+      this.getWarningList()
     },
     getLineList() {
       let data = {
@@ -220,7 +262,6 @@ export default {
         }
       };
       this.$post("/subway/wraning_line", data).then(res => {
-        console.log(res);
         if (res.code === "success") {
           this.stationList = res.data.stations;
           if (type === "watch") {
@@ -232,7 +273,15 @@ export default {
       });
     },
     getWarningList() {
-      let data = this.filterDate;
+      let data = {
+        level: this.filterDegree,
+        timeRange: 0,
+        startTime: this.startTime,
+        endTime: this.endTime,
+        elevatorType: this.filterType,
+        status: this.filterCondition,
+        stationCode: this.stationCode
+      }
       data.lineCode = this.lineCode;
       let params = {
         serialNumber: this.$global().serialNumber,
@@ -240,6 +289,7 @@ export default {
         pageSize: this.pageSize,
         data: data
       };
+      console.log(params)
       this.$post("/subway/warning_list", params).then(res => {
         if (res.code === "success") {
           this.warningList = res.data.list;
@@ -252,17 +302,6 @@ export default {
     setPage(index) {
       this.curPage = index;
       this.getWarningList();
-    },
-    getStation(name, code) {
-      this.$router.push({
-        path: "/ErrorList",
-        query: {
-          lineCode: this.lineCode,
-          stationCode: code,
-          stationName: name
-        }
-      });
-      this.init();
     },
     confirmWarning(index) {
       let id = this.warningList[index].id;
@@ -290,6 +329,12 @@ export default {
     filterDate() {
       this.curPage = 1;
       this.getWarningList();
+    },
+    dateChange (value) {
+      if (value) {
+        this.startTime = value[0]
+        this.endTime = value[1]
+      }
     }
   },
   watch: {
@@ -362,6 +407,13 @@ body {
           > input {
             margin-right: 5px;
           }
+        }
+
+        >.btn {
+          padding: 5px 15px;
+          font-size: 12px;
+          border-radius: 5px;
+          background-color: #fff;
         }
       }
 

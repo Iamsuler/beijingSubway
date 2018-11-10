@@ -27,9 +27,10 @@
     <div id="station-hover" v-show="isHoverStation" :style="{left: stationInfo.leftX + 'px', top: stationInfo.topY + 'px'}">
         <div class="station-hover-wrap">
             <h3>{{stationInfo.name}}</h3>
-            <ul class="list">
-                <li>扶梯数量：{{stationInfo.futi}}</li>
-                <li>直梯数量：{{stationInfo.zhiti}}</li>
+            <ul class="list" v-for="line in stationInfo.lines" :key="line.lineCode">
+							<li class="list-item" @click="chooseTurnStation(line.lineCode)">{{line.lineName}}</li>
+							<li class="list-item">扶梯数量：{{line.ftCount}}</li>
+							<li class="list-item">直梯数量：{{line.ztCount}}</li>
             </ul>
         </div>
     </div>
@@ -131,6 +132,8 @@ export default {
     this.init();
     this.getWarningOverview();
     this.getStationOverview();
+    this.getWarningStations()
+    this.svgLoaded()
   },
   methods: {
     init() {
@@ -665,7 +668,12 @@ export default {
                         imgError.attr({
                             disable: '1'
                         })
-                    }
+										}
+										if (isex == "true") {
+											imgError.attr({
+													isTurn: '1'
+											})
+										}
                     if (ismask) imgError.addClass("mask");
                     imgError.addClass("error-station");
 
@@ -1191,7 +1199,7 @@ export default {
                 // var svgInterval = null;
 
                 $.ajax({
-                    url: "/static/data/beijing.xml",
+                    url: "/static/data/beijing.xml?t=" + new Date().getTime(),
                     dataType: "xml",
                     type: "GET",
                     timeout: 5000,
@@ -1203,8 +1211,6 @@ export default {
                       plugin.options.xml = xml;
                       plugin._redraw();
                       plugin._initpos();
-
-                      vueThis.svgLoaded();
                     }
                 });
 
@@ -1841,7 +1847,25 @@ export default {
         }
         this.$post('/subway/station_overview', data).then(res => {
             if (res.code === 'success') {
-                this.stationOverview = res.data.stations
+                // this.stationOverview = res.data.stations
+                this.stationOverview = [
+                    {
+                        name: '复兴门',
+                        lines: [
+                            {
+																lineCode: '01',
+																lineName: '1号线',
+																ftCount: 1,
+																ztCount: 21
+                            }, {
+																lineCode: '02',
+																lineName: '2号线',
+																ftCount: 1,
+																ztCount: 21
+                            }
+                        ]
+                    }
+                ]
             } else {
                 alert(res.message)
             }
@@ -1876,9 +1900,8 @@ export default {
         var sdata = $(this).attr('sdata')
         for (let index = 0; index < lines.length; index++) {
           const line = lines[index];
-          if (sdata === line.lb) {
+          if (line.warningStatus === 1 && sdata === line.stationName) {
             $(this).attr('href', '/static/images/icon_error.gif')
-
             break;
           }
         }
@@ -1901,11 +1924,14 @@ export default {
     },
     svgLoaded () {
       var that = this
+      if (this.timer !== null) {
+        clearInterval(this.timer)
+        this.timer = null
+      }
       this.timer = setInterval(function () {
         that.getWarningStations()
         that.getWarningOverview()
       }, 120000)
-      
     },
     isLineInSystem (lineCode) {
         let lineList = this.lineWarning.lines
@@ -2014,8 +2040,8 @@ export default {
             if (num) {
                 let code = this.getCode(num);
                 let stationName = $event.attr('sdata');
-                let isDisabled = $event.attr('disable')
-
+								let isDisabled = $event.attr('disable')
+								let isTurn = $event.attr('isTurn')
                 let isInSystem = this.isLineInSystem(code.lineCode)
 
                 // if (!isInSystem) {
@@ -2026,7 +2052,12 @@ export default {
                 if (isDisabled) {
                     alert('该站点暂未开通使用！')
                     return false;
-                }
+								}
+								if (isTurn) {
+                    alert('换乘站请在悬浮框内选择线路')
+                    return false;
+								}
+								
 
                 this.$router.push({
                     path: '/StationDetail',
@@ -2043,30 +2074,35 @@ export default {
         }
 
 
-    },
+		},
+		chooseTurnStation (lineCode) {
+			var stationInfo = this.stationInfo
+			this.$router.push({
+					path: '/StationDetail',
+					query: {
+							lineCode: lineCode,
+							stationCode: stationInfo.code,
+							stationName: stationInfo.name
+					}
+			})
+		},
     setStationInfo (name, x, y) {
-      let stations = this.stationOverview,
-          ftCount = 0,
-          ztCount = 0;
+			let stations = this.stationOverview,
+					stationInfo = {};
 
       for (let index = 0; index < stations.length; index++) {
         const element = stations[index];
 
         if (element.name === name) {
-          ftCount = element.ftCount
-          ztCount = element.ztCount
+					stationInfo = element
           break;
         }
         
-      }
+			}
+			stationInfo.leftX = x
+			stationInfo.topY = y
 
-      this.stationInfo = {
-          name: name,
-          futi: ftCount,
-          zhiti: ztCount,
-          leftX: x,
-          topY: y
-      }
+      this.stationInfo = stationInfo
         
     },
     slidePanel (index) {
@@ -2149,12 +2185,20 @@ export default {
         >h3 {
             font-size: 18px;
             line-height: 25px;
-            margin-bottom: 5px;
         }
 
-        >ul {
-            font-size: 14px;
+        >.list {
+            margin-top: 5px;
+            font-size: 12px;
             line-height: 20px;
+
+						>.list-item {
+							&:first-child {
+								font-size: 14px;
+								color: #0a6bcc;
+								cursor: pointer;
+							}
+						}
         }
     }
 }

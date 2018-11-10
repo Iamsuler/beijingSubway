@@ -112,12 +112,13 @@
             <div class="preview">
                 <p class="icon-error-triangle">报警</p>
                 <p>未确认：{{unconfirmedCount}} /  确认：{{confirmedCount}}</p>
-            <!--    <ul class="preview-opr">
-                    <li>退出</li>
+               <ul class="preview-opr">
+                    <!-- <li>退出</li>
                     <li>事项</li>
-                    <li>历史事项</li>
-                    <li>声音(开)</li>
-                </ul> -->
+                    <li>历史事项</li> -->
+                    <li @click="toggleVoice('off')">{{ voiceBtnTxt }}</li>
+                </ul>
+                <audio ref="warningVoice" id="voice" src="/static/data/warning_voice.mp3" loop></audio>
             </div>
             <div class="newest">
                 <div class="newest-title">
@@ -131,6 +132,7 @@
                           <td class="table-time">{{item.time}}</td>
                           <td>{{item.station}}</td>
                           <td>{{item.device}}</td>
+                          <td>{{item.deviceName}}</td>
                           <td>{{item.remarks}}</td>
                           <td>{{item.trackID}}</td>
                           <td>
@@ -220,6 +222,7 @@ export default {
         "设备故障报警"
       ],
       deviceStatusNames: {
+        '9000': '未知',
         '9001': '急停',
         '9002': '停止',
         '9003': '正常上行',
@@ -228,11 +231,14 @@ export default {
         '9006': '故障',
         '9007': '消防/火警',
         '9008': '待机',
-        '0': '其他（断网）'
-      }
+        '9009': '断网',
+        '9010': '节能',
+        '0': '未接入'
+      },
+      voiceBtnTxt: '声音（关）'
     };
   },
-  created() {
+  mounted() {
     this.init();
     this.initDate();
   },
@@ -246,7 +252,6 @@ export default {
       this.getWarningList();
       this.getStationEntrances();
       this.getStationInfo();
-
       this.updateStation()
     },
     updateStation() {
@@ -414,7 +419,6 @@ export default {
                 southeastList.push(item);
                 break;
             }
-
             initIndex++;
           });
 
@@ -427,6 +431,9 @@ export default {
 
           this.normalDeviceCount = res.data.normalDeviceCount;
           this.warningDeviceCount = res.data.warningDeviceCount;
+          if (this.warningDeviceCount) {
+            this.toggleVoice('on')
+          }
         } else {
           alert(res.message);
         }
@@ -491,7 +498,7 @@ export default {
           stationName: name
         }
       });
-      this.updateStation();
+      this.init()
     },
     toErrorList() {
       this.$router.push({
@@ -519,6 +526,15 @@ export default {
           alert(res.message);
         }
       });
+    },
+    toggleVoice (type) {
+      if (type === 'off') {
+        this.$refs.warningVoice.pause()
+        this.voiceBtnTxt = '声音（开）'
+      } else if (type === 'on') {
+        this.$refs.warningVoice.play()
+        this.voiceBtnTxt = '声音（关）'
+      }
     }
   },
   destroyed() {
@@ -546,6 +562,9 @@ export default {
 }
 
 .icon-dt1 {
+  &.condition9000 {
+    background-image: url(../assets/elevator/icon_ft_qt.png);
+  }
   &.condition9001 {
     background-image: url(../assets/elevator/icon_ft_jj.png);
   }
@@ -573,6 +592,9 @@ export default {
 }
 
 .icon-dt2 {
+  &.condition9000 {
+    background-image: url(../assets/elevator/icon_ft_qt.png);
+  }
   &.condition9001 {
     background-image: url(../assets/elevator/icon_zt_jj.png);
   }

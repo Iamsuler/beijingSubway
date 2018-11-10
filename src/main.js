@@ -8,6 +8,8 @@ import {get, post} from './libs/http.js'
 import Global from './libs/global'
 import 'element-ui/packages/theme-chalk/src/icon.scss'
 import 'element-ui/packages/theme-chalk/src/pagination.scss'
+import 'element-ui/packages/theme-chalk/src/date-picker.scss'
+import 'element-ui/packages/theme-chalk/src/button.scss'
 import 'babel-polyfill'
 
 Vue.config.productionTip = false

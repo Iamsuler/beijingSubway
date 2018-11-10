@@ -46,7 +46,7 @@
                 <p>{{deviceInfo.name}}</p>
             </div>
             <div class="device-drawing" v-if="deviceInfo.blueprintUrl">
-                <span class="link" @click="openLink(deviceInfo.blueprintUrl)">设备图纸</span>
+                <span class="link" @click="openLink(deviceInfo.blueprintUrl)">设备概貌图</span>
             </div>
 
             <div class="icon-close" @click="closeModal"></div>
