@@ -45,7 +45,7 @@
                 <p>备注</p>
                 <p>{{deviceInfo.name}}</p>
             </div>
-            <div class="device-drawing" v-if="deviceInfo.blueprintUrl">
+            <div class="device-drawing" v-if="deviceInfo.transformType === 'A'">
                 <span class="link" @click="openLink(deviceInfo.blueprintUrl)">设备概貌图</span>
             </div>
 

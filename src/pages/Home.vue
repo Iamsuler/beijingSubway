@@ -1172,7 +1172,7 @@ export default {
                     url: "/static/data/interchange.xml",
                     dataType: "xml",
                     type: "GET",
-                    timeout: 5000,
+                    timeout: 10000,
                     error: function(xml) {
                         plugin.options.exml = null;
                         console.log("加载XML文件出错！");
@@ -1186,7 +1186,7 @@ export default {
                     url: "/static/data/stations.xml",
                     dataType: "xml",
                     type: "GET",
-                    timeout: 5000,
+                    timeout: 10000,
                     error: function(xml) {
                         plugin.options.sxml = null;
                         console.log("加载XML文件出错！");
@@ -1199,10 +1199,10 @@ export default {
                 // var svgInterval = null;
 
                 $.ajax({
-                    url: "/static/data/beijing.xml?t=" + new Date().getTime(),
+                    url: "/static/data/beijing.xml",
                     dataType: "xml",
                     type: "GET",
-                    timeout: 5000,
+                    timeout: 10000,
                     error: function(xml) {
                     plugin.options.xml = null;
                         console.log("加载XML文件出错！");
@@ -1847,27 +1847,7 @@ export default {
         }
         this.$post('/subway/station_overview', data).then(res => {
             if (res.code === 'success') {
-                // this.stationOverview = res.data.stations
-                this.stationOverview = [
-                    {
-												name: '复兴门',
-                        lines: [
-                            {
-																lineCode: '01',
-																lineName: '1号线',
-																stationCode: '0102',
-																ftCount: 1,
-																ztCount: 21
-                            }, {
-                                lineCode: '02',
-                                lineName: '2号线',
-																stationCode: '0202',
-                                ftCount: 1,
-                                ztCount: 21
-                            }
-                        ]
-                    }
-                ]
+                this.stationOverview = res.data.stations
             } else {
                 alert(res.message)
             }
@@ -1897,7 +1877,7 @@ export default {
         var sdata = $(this).attr('sdata')
         for (let index = 0; index < lines.length; index++) {
           const line = lines[index];
-          if (line.warningStatus === 1 && sdata === line.stationName) {
+          if (sdata === line.stationName) {
             $(this).attr('href', '/static/images/icon_error.gif')
             break;
           }
@@ -1912,7 +1892,7 @@ export default {
       }
       this.$post('/subway/waring_stations', data).then(res => {
         if (res.code === 'success') {
-          this.errorStationList = res.data.stations
+					this.errorStationList = res.data.stations
           this.setErrorStation()
         } else {
           alert(res.message)
@@ -2054,12 +2034,12 @@ export default {
                     return false;
 								}
 								
-
+								let stationInfo = this.stationInfo.lines[0]
                 this.$router.push({
                     name: 'StationDetail',
                     params: {
-                        lineCode: code.lineCode,
-                        stationCode: code.stationCode
+                        lineCode: stationInfo.lineCode,
+                        stationCode: stationInfo.stationCode
                     }
                 })
             }
@@ -2170,12 +2150,13 @@ export default {
         position: absolute;
         left: 3px;
         bottom: 6px;
-        width: 120px;
+        min-width: 120px;
         padding: 15px;
         text-align: left;
         border: 2px solid rgba(43,50,71,0.30);
         color: #333;
         background-color: #fff;
+				white-space: nowrap;
 
         >h3 {
             font-size: 18px;

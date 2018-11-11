@@ -1,111 +1,113 @@
 <template>
     <div class="detail">
-        <div class="head">
-            <div class="nav">
-                <div class="back" @click="goBack">
-                    <span class="icon-back">返回</span>
+        <div class="container">
+            <div class="head">
+                <div class="nav">
+                    <div class="back" @click="goBack">
+                        <span class="icon-back">返回</span>
+                    </div>
+                    <div class="line">{{line.name}}</div>
+                    <div class="error-wrap">
+                        <p>
+                            <span class="error">报警站点：{{warningCount}}个</span>
+                            <span>正常站点：{{normalCount}}个</span>
+                        </p>
+                        <p class="error">
+                            <span class="icon-error-triangle">报警站点：</span>
+                            <span v-for="(item, index) in warningStationList" :key="index">{{item.stationName}}</span>
+                        </p>
+                    </div>
+                    <div class="search-device">
+                        <i class="icon-search" @click="searchDevice"></i>
+                        <input v-model="deviceId" type="text" placeholder="搜索设备" @keyup.enter="searchDevice">
+                    </div>
                 </div>
-                <div class="line">{{line.name}}</div>
-                <div class="error-wrap">
-                    <p>
-                        <span class="error">报警站点：{{warningCount}}个</span>
-                        <span>正常站点：{{normalCount}}个</span>
-                    </p>
-                    <p class="error">
-                        <span class="icon-error-triangle">报警站点：</span>
-                        <span v-for="(item, index) in warningStationList" :key="index">{{item.stationName}}</span>
-                    </p>
-                </div>
-                <div class="search-device">
-                    <i class="icon-search" @click="searchDevice"></i>
-                    <input v-model="deviceId" type="text" placeholder="搜索设备" @keyup.enter="searchDevice">
+                <div class="station-line">
+                    <div id="line-svg-wrap" @click="selectStation"></div>
                 </div>
             </div>
-            <div class="station-line">
-                <div id="line-svg-wrap" @click="selectStation"></div>
-            </div>
-        </div>
-        <div class="station">
-            <div class="station-title">
-                <h1>{{stationName}}站</h1>
-                <p><span>设备总数：{{normalDeviceCount + warningDeviceCount}}</span><span class="error">报警设备数：{{warningDeviceCount}}</span><span>正常设备数：{{normalDeviceCount}}</span></p>
-            </div>
-            <div class="device">
-                <div class="out-wrap">
-                    <div class="device-wrap">
-                        <div class="device-box" v-for="(item, index) in northwestList" :key="index">
-                            <h3 class="out-name">{{item.name}}口（{{item.lineName}}）</h3>
-                            <ul class="device-list">
-                                <li
-                                  v-for="device in item.devices"
-                                  :key="device.deviceNo"
-                                  class="icon-dt" :class="'icon-dt' + device.deviceType + ' ' + 'condition' + device.deviceStatus"
-                                  :title="deviceStatusNames[device.deviceStatus]"
-                                  @click="showDeviceDetail(device.deviceNo)">{{device.deviceNo}}</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="device-wrap">
-                        <div class="device-box" v-for="(item, index) in northeastList" :key="index">
-                            <h3 class="out-name">{{item.name}}口（{{item.lineName}}）</h3>
-                            <ul class="device-list">
-                                <li
-                                  v-for="device in item.devices"
-                                  :key="device.deviceNo"
-                                  class="icon-dt" :class="'icon-dt' + device.deviceType + ' ' + 'condition' + device.deviceStatus" 
-                                  :title="deviceStatusNames[device.deviceStatus]"
-                                  @click="showDeviceDetail(device.deviceNo)">{{device.deviceNo}}</li>
-                            </ul>
-                        </div>
-                    </div>
+            <div class="station">
+                <div class="station-title">
+                    <h1>{{stationName}}站</h1>
+                    <p><span>设备总数：{{normalDeviceCount + warningDeviceCount}}</span><span class="error">报警设备数：{{warningDeviceCount}}</span><span>正常设备数：{{normalDeviceCount}}</span></p>
                 </div>
-
-                <div class="platform">
-                    <div class="floor" v-for="(floor, index) in floorList" :key="index">
-                        <h3 class="floor-name">{{floor.name}}站厅站台</h3>
-                        <div class="floor-detail">
-                            <div class="title"></div>
-                            <ul class="floor-device-list">
-                                <li
-                                  v-for="device in floor.devices"
-                                  :key="device.deviceNo" class="icon-dt"
-                                  :class="'icon-dt' + device.deviceType + ' ' + 'condition' + device.deviceStatus"
-                                  :title="deviceStatusNames[device.deviceStatus]"
-                                  @click="showDeviceDetail(device.deviceNo)">{{device.deviceNo}}</li>
-                            </ul>
+                <div class="device">
+                    <div class="out-wrap">
+                        <div class="device-wrap">
+                            <div class="device-box" v-for="(item, index) in northwestList" :key="index">
+                                <h3 class="out-name">{{item.name}}口（{{item.lineName}}）</h3>
+                                <ul class="device-list">
+                                    <li
+                                      v-for="device in item.devices"
+                                      :key="device.deviceNo"
+                                      class="icon-dt" :class="'icon-dt' + device.deviceType + ' ' + 'condition' + device.deviceStatus"
+                                      :title="deviceStatusNames[device.deviceStatus] + device.transformType + '类'"
+                                      @click="showDeviceDetail(device.deviceNo)">{{device.deviceNo}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="device-wrap">
+                            <div class="device-box" v-for="(item, index) in northeastList" :key="index">
+                                <h3 class="out-name">{{item.name}}口（{{item.lineName}}）</h3>
+                                <ul class="device-list">
+                                    <li
+                                      v-for="device in item.devices"
+                                      :key="device.deviceNo"
+                                      class="icon-dt" :class="'icon-dt' + device.deviceType + ' ' + 'condition' + device.deviceStatus" 
+                                      :title="deviceStatusNames[device.deviceStatus] + device.transformType + '类'"
+                                      @click="showDeviceDetail(device.deviceNo)">{{device.deviceNo}}</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
+
+                    <div class="platform" v-if="floorList.length > 0">
+                        <div class="floor" v-for="(floor, index) in floorList" :key="index">
+                            <h3 class="floor-name">{{floor.name}}站厅站台</h3>
+                            <div class="floor-detail">
+                                <div class="title"></div>
+                                <ul class="floor-device-list">
+                                    <li
+                                      v-for="device in floor.devices"
+                                      :key="device.deviceNo" class="icon-dt"
+                                      :class="'icon-dt' + device.deviceType + ' ' + 'condition' + device.deviceStatus"
+                                      :title="deviceStatusNames[device.deviceStatus] + device.transformType + '类'"
+                                      @click="showDeviceDetail(device.deviceNo)">{{device.deviceNo}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="out-wrap">
+                        <div class="device-wrap">
+                            <div class="device-box" v-for="(item, index) in southwestList" :key="index">
+                                <h3 class="out-name">{{item.name}}口（{{item.lineName}}）</h3>
+                                <ul class="device-list">
+                                    <li
+                                      v-for="device in item.devices"
+                                      :key="device.deviceNo"
+                                      class="icon-dt" :class="'icon-dt' + device.deviceType + ' ' + 'condition' + device.deviceStatus"
+                                      :title="deviceStatusNames[device.deviceStatus] + device.transformType + '类'"
+                                      @click="showDeviceDetail(device.deviceNo)">{{device.deviceNo}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="device-wrap">
+                            <div class="device-box" v-for="(item, index) in southeastList" :key="index">
+                                <h3 class="out-name">{{item.name}}口（{{item.lineName}}）</h3>
+                                <ul class="device-list">
+                                    <li
+                                      v-for="device in item.devices"
+                                      :key="device.deviceNo"
+                                      class="icon-dt" :class="'icon-dt' + device.deviceType + ' ' + 'condition' + device.deviceStatus"
+                                      :title="deviceStatusNames[device.deviceStatus] + device.transformType + '类'"
+                                      @click="showDeviceDetail(device.deviceNo)">{{device.deviceNo}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-
-                <div class="out-wrap">
-                    <div class="device-wrap">
-                        <div class="device-box" v-for="(item, index) in southwestList" :key="index">
-                            <h3 class="out-name">{{item.name}}口（{{item.lineName}}）</h3>
-                            <ul class="device-list">
-                                <li
-                                  v-for="device in item.devices"
-                                  :key="device.deviceNo"
-                                  class="icon-dt" :class="'icon-dt' + device.deviceType + ' ' + 'condition' + device.deviceStatus"
-                                  :title="deviceStatusNames[device.deviceStatus]"
-                                  @click="showDeviceDetail(device.deviceNo)">{{device.deviceNo}}</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="device-wrap">
-                        <div class="device-box" v-for="(item, index) in southeastList" :key="index">
-                            <h3 class="out-name">{{item.name}}口（{{item.lineName}}）</h3>
-                            <ul class="device-list">
-                                <li
-                                  v-for="device in item.devices"
-                                  :key="device.deviceNo"
-                                  class="icon-dt" :class="'icon-dt' + device.deviceType + ' ' + 'condition' + device.deviceStatus"
-                                  :title="deviceStatusNames[device.deviceStatus]"
-                                  @click="showDeviceDetail(device.deviceNo)">{{device.deviceNo}}</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
         <div class="foot">
@@ -115,7 +117,7 @@
                <ul class="preview-opr">
                     <!-- <li>退出</li>
                     <li>事项</li> -->
-                    <li>在线</li>
+                    <li>{{ collectorStatus }}</li>
                     <li @click="toggleVoice('toggle')">声音（{{ voiceBtnTxt }}）</li>
                 </ul>
                 <audio ref="warningVoice" id="voice" src="/static/data/warning_voice.mp3" loop></audio>
@@ -169,12 +171,11 @@ export default {
       date: "",
       weekDay: "",
       curTime: "",
-
       // modal
       deviceId: "",
 
       warningList: [],
-
+      // 出口和站台设备
       southeastList: [],
       northeastList: [],
       southwestList: [],
@@ -189,15 +190,15 @@ export default {
         name: "",
         color: ""
       },
-
+      // 站点报警数量
       warningCount: 0,
       normalCount: 0,
       warningStationList: [],
-
+      // params
       lineCode: "",
       stationCode: "",
       stationName: "",
-
+      // 设备报警数量
       warningDeviceCount: 0,
       normalDeviceCount: 0,
 
@@ -219,29 +220,30 @@ export default {
         "设备故障报警"
       ],
       deviceStatusNames: {
-        '9000': '未知',
-        '9001': '急停',
-        '9002': '停止',
-        '9003': '正常上行',
-        '9004': '正常下行',
-        '9005': '检修',
-        '9006': '故障',
-        '9007': '消防/火警',
-        '9008': '待机',
-        '9009': '断网',
-        '9010': '节能',
-        '0': '未接入'
+        '9000': '未知 ',
+        '9001': '急停 ',
+        '9002': '停止 ',
+        '9003': '正常上行 ',
+        '9004': '正常下行 ',
+        '9005': '检修 ',
+        '9006': '故障 ',
+        '9007': '消防/火警 ',
+        '9008': '待机 ',
+        '9009': '断网 ',
+        '9010': '节能 ',
+        '0': '未接入 '
       },
       voiceBtnTxt: '开',
-      isCanPlay: false
+      isCanPlay: false,
+      collectorStatus: '在线'
     };
   },
   mounted() {
-    // this.stationName = this.$route.query.stationName;
     this.stationCode = this.$route.params.stationCode;
     this.lineCode = this.$route.params.lineCode;
     this.getStationInfo();
     this.init();
+    this.getCollectorStatus()
     this.initDate();
   },
   methods: {
@@ -541,6 +543,15 @@ export default {
           this.toPlay()
         }
       }
+    },
+    getCollectorStatus () {
+      this.$post('/subway/collector_status').then(res => {
+        if (res.code === 'success') {
+          this.collectorStatus = res.data.status === 1 ? '在线' : '断网'
+        } else {
+          alert(res.message)
+        }
+      })
     }
   },
   destroyed() {
@@ -552,6 +563,7 @@ export default {
 
 <style lang="scss" scoped>
 .detail {
+  height: 100%;
   position: relative;
   min-width: 1920px;
 }
@@ -569,7 +581,7 @@ export default {
 
 .icon-dt1 {
   &.condition9000 {
-    background-image: url(../assets/elevator/icon_ft_qt.png);
+    background-image: url(../assets/elevator/icon_ft_wz.png);
   }
   &.condition9001 {
     background-image: url(../assets/elevator/icon_ft_jj.png);
@@ -592,6 +604,12 @@ export default {
   &.condition9007 {
     background-image: url(../assets/elevator/icon_ft_xf.png);
   }
+  &.condition9009 {
+    background-image: url(../assets/elevator/icon_ft_dw.png);
+  }
+  &.condition9010 {
+    background-image: url(../assets/elevator/icon_ft_jn.png);
+  }
   &.condition0 {
     background-image: url(../assets/elevator/icon_ft_qt.png);
   }
@@ -599,7 +617,7 @@ export default {
 
 .icon-dt2 {
   &.condition9000 {
-    background-image: url(../assets/elevator/icon_ft_qt.png);
+    background-image: url(../assets/elevator/icon_zt_wz.png);
   }
   &.condition9001 {
     background-image: url(../assets/elevator/icon_zt_jj.png);
@@ -625,14 +643,32 @@ export default {
   &.condition9008 {
     background-image: url(../assets/elevator/icon_zt_dj.png);
   }
+  &.condition9009 {
+    background-image: url(../assets/elevator/icon_zt_dw.png);
+  }
+  // &.condition9010 {
+  //   background-image: url(../assets/elevator/icon_zt_jn.png);
+  // }
   &.condition0 {
     background-image: url(../assets/elevator/icon_zt_qt.png);
   }
 }
 
+.container {
+  // height: 100%;
+  min-height: 100%;
+
+  &:after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 140px;
+  }
+}
+
 .station {
   position: relative;
-  min-height: 600px;
+  // min-height: 600px;
   padding: 40px 100px 20px;
   background-color: #f5f5f5;
 
@@ -763,6 +799,8 @@ export default {
 .foot {
   display: flex;
   justify-content: space-between;
+  height: 140px;
+  margin-top: -140px;
   padding: 10px 100px;
   background-color: #d9dbde;
 
