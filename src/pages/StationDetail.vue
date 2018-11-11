@@ -116,7 +116,7 @@
                     <!-- <li>退出</li>
                     <li>事项</li>
                     <li>历史事项</li> -->
-                    <li @click="toggleVoice('off')">{{ voiceBtnTxt }}</li>
+                    <li @click="toggleVoice('toggle')">声音（{{ voiceBtnTxt }}）</li>
                 </ul>
                 <audio ref="warningVoice" id="voice" src="/static/data/warning_voice.mp3" loop></audio>
             </div>
@@ -130,10 +130,10 @@
                       <tr class="newest-row" v-for="(item, index) in warningList" :key="index">
                           <td :style="{background: colorList[item.level - 1]}">{{levelNameList[item.level - 1]}}</td>
                           <td class="table-time">{{item.time}}</td>
-                          <td>{{item.station}}</td>
+                          <td>{{item.brand}}</td>
                           <td>{{item.device}}</td>
                           <td>{{item.deviceName}}</td>
-                          <td>{{item.remarks}}</td>
+                          <td>{{item.remark}}</td>
                           <td>{{item.trackID}}</td>
                           <td>
                               <button v-if="item.status == 2" key="unconfirmed" @click="confirmWarning(index)">确认</button>
@@ -235,7 +235,8 @@ export default {
         '9010': '节能',
         '0': '未接入'
       },
-      voiceBtnTxt: '声音（关）'
+      voiceBtnTxt: '开',
+      isCanPlay: false
     };
   },
   mounted() {
@@ -272,7 +273,6 @@ export default {
         }
       };
       this.$post("/subway/wraning_line", data).then(res => {
-        console.log(res);
         if (res.code === "success") {
           let data = res.data;
           let list = [];
@@ -299,7 +299,6 @@ export default {
         }
       };
       this.$post("/subway/station_info", data).then(res => {
-        console.log(res);
         if (res.code === "success") {
           this.lineStations = res.data.stations;
           this.line.name = res.data.lineName;
@@ -431,8 +430,8 @@ export default {
 
           this.normalDeviceCount = res.data.normalDeviceCount;
           this.warningDeviceCount = res.data.warningDeviceCount;
-          if (this.warningDeviceCount) {
-            this.toggleVoice('on')
+          if (this.isCanPlay && this.warningDeviceCount > 0) {
+            this.toPlay()
           }
         } else {
           alert(res.message);
@@ -448,7 +447,8 @@ export default {
           lineCode: this.lineCode,
           stationCode: this.stationCode,
           level: 0,
-          timeRange: 0,
+          startTime: '',
+          endTime: '',
           elevatorType: 0,
           status: 0
         }
@@ -518,7 +518,6 @@ export default {
         }
       };
       this.$post("/subway/warning_confirm", params).then(res => {
-        console.log(res);
         if (res.code === "success") {
           alert("确认成功！");
           this.warningList[index].status = 1;
@@ -527,13 +526,23 @@ export default {
         }
       });
     },
-    toggleVoice (type) {
-      if (type === 'off') {
-        this.$refs.warningVoice.pause()
-        this.voiceBtnTxt = '声音（开）'
-      } else if (type === 'on') {
-        this.$refs.warningVoice.play()
-        this.voiceBtnTxt = '声音（关）'
+    toPlay () {
+      this.$refs.warningVoice.play()
+      this.voiceBtnTxt = '关'
+    },
+    toPause () {
+      this.$refs.warningVoice.pause()
+      this.voiceBtnTxt = '开'
+    },
+    toggleVoice () {
+      this.isCanPlay = true
+      if (this.voiceBtnTxt === '关') {
+        this.toPause()
+      } else if (this.voiceBtnTxt === '开') {
+        this.voiceBtnTxt = '关'
+        if (this.warningDeviceCount > 0) {
+          this.toPlay()
+        }
       }
     }
   },

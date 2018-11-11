@@ -91,7 +91,7 @@
                             <tr>
                                 <th>优先级</th>
                                 <th class="table-time">时间</th>
-                                <th>站点</th>
+                                <th>品牌</th>
                                 <th>设备编号</th>
                                 <th>设备名称</th>
                                 <th>报警信息</th>
@@ -103,10 +103,10 @@
                             <tr v-for="(item, index) in warningList" :key="index">
                                 <td :style="{background: colorList[item.level - 1]}">{{levelNameList[item.level - 1]}}</td>
                                 <td class="table-time">{{item.time}}</td>
-                                <td>{{item.stationName}}</td>
+                                <td>{{item.brand}}</td>
                                 <td>{{item.device}}</td>
                                 <td>{{item.deviceName}}</td>
-                                <td>{{item.remarks}}</td>
+                                <td>{{item.remark}}</td>
                                 <td>{{item.trackID}}</td>
                                 <td>
                                     <button v-if="item.status == 2" key="unconfirmed" @click="confirmWarning(index)">确认</button>
@@ -275,7 +275,6 @@ export default {
     getWarningList() {
       let data = {
         level: this.filterDegree,
-        timeRange: 0,
         startTime: this.startTime,
         endTime: this.endTime,
         elevatorType: this.filterType,
@@ -289,7 +288,6 @@ export default {
         pageSize: this.pageSize,
         data: data
       };
-      console.log(params)
       this.$post("/subway/warning_list", params).then(res => {
         if (res.code === "success") {
           this.warningList = res.data.list;
@@ -454,7 +452,7 @@ body {
     > th,
     > td {
       &:first-child {
-        padding: 0 10px;
+        padding: 0 5px;
         text-align: center;
       }
 
@@ -479,7 +477,7 @@ body {
     }
 
     > .table-time {
-      padding-left: 20px;
+      padding-left: 10px;
     }
   }
 }

@@ -27,8 +27,8 @@
     <div id="station-hover" v-show="isHoverStation" :style="{left: stationInfo.leftX + 'px', top: stationInfo.topY + 'px'}">
         <div class="station-hover-wrap">
             <h3>{{stationInfo.name}}</h3>
-            <ul class="list" v-for="line in stationInfo.lines" :key="line.lineCode">
-							<li class="list-item" @click="chooseTurnStation(line.lineCode)">{{line.lineName}}</li>
+            <ul class="list" v-for="(line, index) in stationInfo.lines" :key="line.lineCode">
+							<li class="list-item" @click="chooseTurnStation(index)">{{line.lineName}}</li>
 							<li class="list-item">扶梯数量：{{line.ftCount}}</li>
 							<li class="list-item">直梯数量：{{line.ztCount}}</li>
             </ul>
@@ -1850,18 +1850,20 @@ export default {
                 // this.stationOverview = res.data.stations
                 this.stationOverview = [
                     {
-                        name: '复兴门',
+												name: '复兴门',
                         lines: [
                             {
 																lineCode: '01',
 																lineName: '1号线',
+																stationCode: '0102',
 																ftCount: 1,
 																ztCount: 21
                             }, {
-																lineCode: '02',
-																lineName: '2号线',
-																ftCount: 1,
-																ztCount: 21
+                                lineCode: '02',
+                                lineName: '2号线',
+																stationCode: '0202',
+                                ftCount: 1,
+                                ztCount: 21
                             }
                         ]
                     }
@@ -1878,11 +1880,6 @@ export default {
         this.$post('/subway/warning_overview', data).then(res => {
             if (res.code === 'success') {
                 this.lineWarning = res.data
-                // res.data.lines.forEach(item => {
-                //     console.log(item.lineName, item.lineCode)
-                //  })
-                //sessionStorage.setItem('lineList', JSON.stringify(res.data.lines));
-
             } else {
                 alert(res.message)
             }
@@ -2022,7 +2019,6 @@ export default {
         lineCode = lineCode < 10 ? '0' + lineCode : lineCode;
         stationCode = stationCode < 1000 ? '0' + stationCode : stationCode;
 
-        console.log(lineCode, stationCode)
         return {
             lineCode: lineCode,
             stationCode: stationCode
@@ -2075,13 +2071,14 @@ export default {
 
 
 		},
-		chooseTurnStation (lineCode) {
+		chooseTurnStation (index) {
 			var stationInfo = this.stationInfo
+			var line = stationInfo.lines[index]
 			this.$router.push({
 					path: '/StationDetail',
 					query: {
-							lineCode: lineCode,
-							stationCode: stationInfo.code,
+							lineCode: line.lineCode,
+							stationCode: line.stationCode,
 							stationName: stationInfo.name
 					}
 			})
