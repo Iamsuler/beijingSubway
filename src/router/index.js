@@ -15,7 +15,7 @@ export default new Router({
     path: '*',
     redirect: '/'
   }, {
-    path: '/StationDetail',
+    path: '/StationDetail/:lineCode/:stationCode',
     name: 'StationDetail',
     component: StationDetail
   }, {

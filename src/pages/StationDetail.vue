@@ -114,8 +114,8 @@
                 <p>未确认：{{unconfirmedCount}} /  确认：{{confirmedCount}}</p>
                <ul class="preview-opr">
                     <!-- <li>退出</li>
-                    <li>事项</li>
-                    <li>历史事项</li> -->
+                    <li>事项</li> -->
+                    <li>在线</li>
                     <li @click="toggleVoice('toggle')">声音（{{ voiceBtnTxt }}）</li>
                 </ul>
                 <audio ref="warningVoice" id="voice" src="/static/data/warning_voice.mp3" loop></audio>
@@ -169,9 +169,6 @@ export default {
       date: "",
       weekDay: "",
       curTime: "",
-      stationName: "",
-      stationCode: "",
-      lineCode: "",
 
       // modal
       deviceId: "",
@@ -240,19 +237,18 @@ export default {
     };
   },
   mounted() {
+    // this.stationName = this.$route.query.stationName;
+    this.stationCode = this.$route.params.stationCode;
+    this.lineCode = this.$route.params.lineCode;
+    this.getStationInfo();
     this.init();
     this.initDate();
   },
   methods: {
     init() {
-      this.stationName = this.$route.query.stationName;
-      this.stationCode = this.$route.query.stationCode;
-      this.lineCode = this.$route.query.lineCode;
-
       this.getWarningLine();
       this.getWarningList();
       this.getStationEntrances();
-      this.getStationInfo();
       this.updateStation()
     },
     updateStation() {
@@ -263,6 +259,7 @@ export default {
       this.timer = setInterval(() => {
         this.getStationEntrances();
         this.getWarningList();
+        this.getWarningLine();
       }, 120000);
     },
     getWarningLine() {
@@ -324,11 +321,12 @@ export default {
         if (index % 2 !== 0) {
           textY = 75;
         }
-        if (item.name === this.stationName) {
+        if (item.code === this.stationCode) {
           html += `<image xlink:href="/static/images/icon_cur_station.png" width="14" height="14" x="${x -
             7}" y="43" sdata="${item.name}" code="${
             item.code
           }" index="${index}"></image>`;
+          this.stationName = item.name
         } else if (!item.enabled) {
           html += `<circle r="6" cx="${x}" cy="50" fill="#ccc" stroke="black" stroke-width="1" sdata="${
             item.name
@@ -365,17 +363,17 @@ export default {
 
       if (nodeName === "circle" || nodeName === "image") {
         let isDisabled = $event.attr("data-disabled");
-        let sdata = $event.attr("sdata") || "";
+        let stationCode = $event.attr("code");
 
-        if (!isDisabled && sdata && sdata !== this.stationName) {
-          let stationCode = $event.attr("code");
+        if (!isDisabled && stationCode && stationCode !== this.stationName) {
+          let sdata = $event.attr("sdata");
 
           this.stationName = sdata;
           this.stationCode = stationCode;
 
           this.initLineSVG();
 
-          this.getStation(sdata, stationCode);
+          this.getStation(stationCode);
         }
       }
     },
@@ -489,13 +487,12 @@ export default {
     showDeviceDetail(id) {
       this.$refs.device.showDeviceModal(id);
     },
-    getStation(name, code) {
+    getStation(code) {
       this.$router.push({
-        path: "/StationDetail",
-        query: {
+        name: "StationDetail",
+        params: {
           lineCode: this.lineCode,
-          stationCode: code,
-          stationName: name
+          stationCode: code
         }
       });
       this.init()

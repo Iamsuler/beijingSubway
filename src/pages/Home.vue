@@ -2056,11 +2056,10 @@ export default {
 								
 
                 this.$router.push({
-                    path: '/StationDetail',
-                    query: {
+                    name: 'StationDetail',
+                    params: {
                         lineCode: code.lineCode,
-                        stationCode: code.stationCode,
-                        stationName: stationName
+                        stationCode: code.stationCode
                     }
                 })
             }
@@ -2075,11 +2074,10 @@ export default {
 			var stationInfo = this.stationInfo
 			var line = stationInfo.lines[index]
 			this.$router.push({
-					path: '/StationDetail',
-					query: {
+					name: 'StationDetail',
+					params: {
 							lineCode: line.lineCode,
-							stationCode: line.stationCode,
-							stationName: stationInfo.name
+							stationCode: line.stationCode
 					}
 			})
 		},
