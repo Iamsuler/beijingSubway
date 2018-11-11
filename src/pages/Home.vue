@@ -1,4 +1,5 @@
 <template>
+	<!-- 首页 -->
   <div class="home">
     <div class="subwaymap">
       <img src="/static/images/turn.png" id="turn_icon" style="display:none;" />
@@ -1907,7 +1908,8 @@ export default {
       }
       this.timer = setInterval(function () {
         that.getWarningStations()
-        that.getWarningOverview()
+				that.getWarningOverview()
+				// 页面定时刷新 ms
       }, 120000)
     },
     isLineInSystem (lineCode) {

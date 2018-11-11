@@ -1,4 +1,5 @@
 <template>
+    <!-- 站点详情页面 -->
     <div class="detail">
         <div class="container">
             <div class="head">
@@ -262,6 +263,7 @@ export default {
         this.getStationEntrances();
         this.getWarningList();
         this.getWarningLine();
+        // 页面定时刷新 ms
       }, 120000);
     },
     getWarningLine() {

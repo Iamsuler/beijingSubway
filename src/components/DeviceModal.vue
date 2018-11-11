@@ -1,4 +1,5 @@
 <template>
+  <!-- 设备信息弹框组件 -->
     <div class="modal" v-show="isShowDetailModal">
         <div class="modal-body devide-detail">
             <h3 class="title">电梯设备信息</h3>

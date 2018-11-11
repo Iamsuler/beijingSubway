@@ -1,139 +1,140 @@
 <template>
-<div class="error-page-wrap">
-    <div class="error-page">
-        <div class="head">
-            <div class="nav">
-                <div class="back" @click="goBack">
-                    <span class="icon-back">返回</span>
-                </div>
-                <div class="search-device">
-                    <i class="icon-search" @click="searchDevice"></i>
-                    <input v-model="deviceId" type="text" placeholder="搜索设备" @keyup.enter="searchDevice">
-                </div>
-            </div>
-        </div>
-        <div class="rel">
-            <div class="error-wrap">
-                <div class="search">
-                    <div class="search-title">信息筛选：</div>
-                    <ul class="search-list">
+  <!-- 全部报警页面 -->
+  <div class="error-page-wrap">
+      <div class="error-page">
+          <div class="head">
+              <div class="nav">
+                  <div class="back" @click="goBack">
+                      <span class="icon-back">返回</span>
+                  </div>
+                  <div class="search-device">
+                      <i class="icon-search" @click="searchDevice"></i>
+                      <input v-model="deviceId" type="text" placeholder="搜索设备" @keyup.enter="searchDevice">
+                  </div>
+              </div>
+          </div>
+          <div class="rel">
+              <div class="error-wrap">
+                  <div class="search">
+                      <div class="search-title">信息筛选：</div>
+                      <ul class="search-list">
 
-                        <li class="search-item">
-                            <div class="search-item-title">线路：</div>
-                            <div class="serach-item-label line-item-label">
-                                <label><input name="line" type="radio" v-model="lineCode" value="0">全部</label>
-                                <label v-for="(item, index) in lineList" :key="index"> <input name="line" type="radio" v-model="lineCode" :value="item.lineCode">{{item.lineName}}</label>
-                            </div>
-                        </li>
-                        <li class="search-item">
-                            <div class="search-item-title">站点：</div>
-                            <div class="serach-item-label">
-                                <label><input name="station" type="radio" v-model="stationCode" value="0">全部</label>
-                                <label v-for="(item, index) in stationList" :key="index"><input name="station" type="radio"  v-model="stationCode" :value="item.stationCode">{{item.stationName}}</label>
-                            </div>
-                        </li>
-                        <li class="search-item">
-                            <div class="search-item-title">报警级别：</div>
-                            <div class="serach-item-label">
-                                <label><input name="degree" type="radio" v-model="filterDegree" value="0">全部</label>
-                                <label><input name="degree" type="radio" v-model="filterDegree" value="1">紧急报警</label>
-                                <label><input name="degree" type="radio" v-model="filterDegree" value="2">事故报警</label>
-                                <label><input name="degree" type="radio" v-model="filterDegree" value="3">普通报警</label>
-                                <label><input name="degree" type="radio" v-model="filterDegree" value="4">趋势报警</label>
-                                <label><input name="degree" type="radio" v-model="filterDegree" value="5">初始报警</label>
-                                <label><input name="degree" type="radio" v-model="filterDegree" value="6">设备故障报警</label>
-                            </div>
-                        </li>
-                        <li class="search-item">
-                            <div class="search-item-title">时间段：</div>
-                            <div class="serach-item-label">
-                                <el-date-picker
-                                  v-model="filterTime"
-                                  :value-format="'yyyy-MM-dd HH:mm:ss'"
-                                  @change="dateChange"
-                                  type="datetimerange"
-                                  range-separator="至"
-                                  start-placeholder="开始日期"
-                                  :picker-options="datePickerOptions"
-                                  end-placeholder="结束日期">
-                                </el-date-picker>
-                            </div>
-                        </li>
-                        <li class="search-item">
-                            <div class="search-item-title">电梯类型：</div>
-                            <div class="serach-item-label">
-                                <label><input name="type" type="radio" v-model="filterType" value="0">全部</label>
-                                <label><input name="type" type="radio" v-model="filterType" value="1">扶梯</label>
-                                <label><input name="type" type="radio" v-model="filterType" value="2">直梯</label>
-                            </div>
-                        </li>
-                        <li class="search-item">
-                            <div class="search-item-title">报警状态：</div>
-                            <div class="serach-item-label">
-                                <label><input name="condition" type="radio" v-model="filterCondition" value="0">全部</label>
-                                <label><input name="condition" type="radio" v-model="filterCondition" value="1">已确认</label>
-                                <label><input name="condition" type="radio" v-model="filterCondition" value="2">未确认</label>
-                            </div>
-                        </li>
-                        <li class="search-item">
-                            <div class="search-item-title"></div>
-                            <div class="serach-item-label">
-                                <button class="btn" @click="filterDate">确认</button>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+                          <li class="search-item">
+                              <div class="search-item-title">线路：</div>
+                              <div class="serach-item-label line-item-label">
+                                  <label><input name="line" type="radio" v-model="lineCode" value="0">全部</label>
+                                  <label v-for="(item, index) in lineList" :key="index"> <input name="line" type="radio" v-model="lineCode" :value="item.lineCode">{{item.lineName}}</label>
+                              </div>
+                          </li>
+                          <li class="search-item">
+                              <div class="search-item-title">站点：</div>
+                              <div class="serach-item-label">
+                                  <label><input name="station" type="radio" v-model="stationCode" value="0">全部</label>
+                                  <label v-for="(item, index) in stationList" :key="index"><input name="station" type="radio"  v-model="stationCode" :value="item.stationCode">{{item.stationName}}</label>
+                              </div>
+                          </li>
+                          <li class="search-item">
+                              <div class="search-item-title">报警级别：</div>
+                              <div class="serach-item-label">
+                                  <label><input name="degree" type="radio" v-model="filterDegree" value="0">全部</label>
+                                  <label><input name="degree" type="radio" v-model="filterDegree" value="1">紧急报警</label>
+                                  <label><input name="degree" type="radio" v-model="filterDegree" value="2">事故报警</label>
+                                  <label><input name="degree" type="radio" v-model="filterDegree" value="3">普通报警</label>
+                                  <label><input name="degree" type="radio" v-model="filterDegree" value="4">趋势报警</label>
+                                  <label><input name="degree" type="radio" v-model="filterDegree" value="5">初始报警</label>
+                                  <label><input name="degree" type="radio" v-model="filterDegree" value="6">设备故障报警</label>
+                              </div>
+                          </li>
+                          <li class="search-item">
+                              <div class="search-item-title">时间段：</div>
+                              <div class="serach-item-label">
+                                  <el-date-picker
+                                    v-model="filterTime"
+                                    :value-format="'yyyy-MM-dd HH:mm:ss'"
+                                    @change="dateChange"
+                                    type="datetimerange"
+                                    range-separator="至"
+                                    start-placeholder="开始日期"
+                                    :picker-options="datePickerOptions"
+                                    end-placeholder="结束日期">
+                                  </el-date-picker>
+                              </div>
+                          </li>
+                          <li class="search-item">
+                              <div class="search-item-title">电梯类型：</div>
+                              <div class="serach-item-label">
+                                  <label><input name="type" type="radio" v-model="filterType" value="0">全部</label>
+                                  <label><input name="type" type="radio" v-model="filterType" value="1">扶梯</label>
+                                  <label><input name="type" type="radio" v-model="filterType" value="2">直梯</label>
+                              </div>
+                          </li>
+                          <li class="search-item">
+                              <div class="search-item-title">报警状态：</div>
+                              <div class="serach-item-label">
+                                  <label><input name="condition" type="radio" v-model="filterCondition" value="0">全部</label>
+                                  <label><input name="condition" type="radio" v-model="filterCondition" value="1">已确认</label>
+                                  <label><input name="condition" type="radio" v-model="filterCondition" value="2">未确认</label>
+                              </div>
+                          </li>
+                          <li class="search-item">
+                              <div class="search-item-title"></div>
+                              <div class="serach-item-label">
+                                  <button class="btn" @click="filterDate">确认</button>
+                              </div>
+                          </li>
+                      </ul>
+                  </div>
 
-                <div class="result">
-                    <div class="result-title">报警信息{{allWarningCount}}条：</div>
-                    <table class="resut-table">
-                        <thead>
-                            <tr>
-                                <th>优先级</th>
-                                <th class="table-time">时间</th>
-                                <th>品牌</th>
-                                <th>设备编号</th>
-                                <th>设备名称</th>
-                                <th>报警信息</th>
-                                <th>工单号</th>
-                                <th>确认状态</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(item, index) in warningList" :key="index">
-                                <td :style="{background: colorList[item.level - 1]}">{{levelNameList[item.level - 1]}}</td>
-                                <td class="table-time">{{item.time}}</td>
-                                <td>{{item.brand}}</td>
-                                <td>{{item.device}}</td>
-                                <td>{{item.deviceName}}</td>
-                                <td>{{item.remark}}</td>
-                                <td>{{item.trackID}}</td>
-                                <td>
-                                    <button v-if="item.status == 2" key="unconfirmed" @click="confirmWarning(index)">确认</button>
-                                    <button v-else key="confirmed" class="checked">已确认</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                <!--    <ul class="pagination" v-show="warningList.length > 0">
-                        <li @click="pageTurning(-1)" :class="{'disabled': curPage === 1}">上一页</li>
-                        <li v-for="item in allPage" :class="{'disabled': curPage === item}" :key="item" @click="setPage(item)">{{item}}</li>
-                        <li @click="pageTurning(1)" :class="{'disabled': curPage === allPage}">下一页</li>
-                    </ul> -->
-                    <el-pagination v-show="allWarningCount > 0"
-                        background
-                        layout="prev, pager, next"
-                        :page-size="pageSize"
-                        :current-page="curPage"
-                        @current-change="setPage"
-                        :total="allWarningCount">
-                    </el-pagination>
-                </div>
-            </div>
-            <device-modal ref="device"></device-modal>
-        </div>
-    </div>
-</div>
+                  <div class="result">
+                      <div class="result-title">报警信息{{allWarningCount}}条：</div>
+                      <table class="resut-table">
+                          <thead>
+                              <tr>
+                                  <th>优先级</th>
+                                  <th class="table-time">时间</th>
+                                  <th>品牌</th>
+                                  <th>设备编号</th>
+                                  <th>设备名称</th>
+                                  <th>报警信息</th>
+                                  <th>工单号</th>
+                                  <th>确认状态</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr v-for="(item, index) in warningList" :key="index">
+                                  <td :style="{background: colorList[item.level - 1]}">{{levelNameList[item.level - 1]}}</td>
+                                  <td class="table-time">{{item.time}}</td>
+                                  <td>{{item.brand}}</td>
+                                  <td>{{item.device}}</td>
+                                  <td>{{item.deviceName}}</td>
+                                  <td>{{item.remark}}</td>
+                                  <td>{{item.trackID}}</td>
+                                  <td>
+                                      <button v-if="item.status == 2" key="unconfirmed" @click="confirmWarning(index)">确认</button>
+                                      <button v-else key="confirmed" class="checked">已确认</button>
+                                  </td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  <!--    <ul class="pagination" v-show="warningList.length > 0">
+                          <li @click="pageTurning(-1)" :class="{'disabled': curPage === 1}">上一页</li>
+                          <li v-for="item in allPage" :class="{'disabled': curPage === item}" :key="item" @click="setPage(item)">{{item}}</li>
+                          <li @click="pageTurning(1)" :class="{'disabled': curPage === allPage}">下一页</li>
+                      </ul> -->
+                      <el-pagination v-show="allWarningCount > 0"
+                          background
+                          layout="prev, pager, next"
+                          :page-size="pageSize"
+                          :current-page="curPage"
+                          @current-change="setPage"
+                          :total="allWarningCount">
+                      </el-pagination>
+                  </div>
+              </div>
+              <device-modal ref="device"></device-modal>
+          </div>
+      </div>
+  </div>
 </template>
 
 <script>
