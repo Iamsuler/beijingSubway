@@ -2,6 +2,11 @@
 
 > A Vue.js project
 
+## git 相关操作
+### git 拉取最新代码操作
+1. 进入项目文件夹，点击右键选择 git bush here  会出现git命令行
+2. 在命令行中输入  git pull origin master  即可拉取最新代码
+
 ## Build Setup
 
 ``` bash
