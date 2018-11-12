@@ -25,7 +25,7 @@
           </ul>
       </div>
     </div>
-    <div id="station-hover" v-show="isHoverStation" :style="{left: stationInfo.leftX + 'px', top: stationInfo.topY + 'px'}">
+    <div id="station-hover" :class="{'active': isHoverStation}" :style="{left: stationInfo.leftX + 'px', top: stationInfo.topY + 'px'}">
         <div class="station-hover-wrap">
             <h3>{{stationInfo.name}}</h3>
             <ul class="list" v-for="(line, index) in stationInfo.lines" :key="line.lineCode">
@@ -115,7 +115,16 @@ export default {
           stations: []
         },
 
-        stationOverview: [],
+        stationOverview: [{
+          name: '天安门西',
+          lines: [{
+            lineName: '1号线',
+            lineCode: '01',
+            stationCode: '0102',
+            ztCount: 34,
+            ftCount: 2
+          }]
+        }],
         lineMenu: [],
         lineWarning: {
             lines: [],
@@ -1912,23 +1921,23 @@ export default {
 				// 页面定时刷新 ms
       }, 120000)
     },
-    isLineInSystem (lineCode) {
-        let lineList = this.lineWarning.lines
-        let inSystem = false
-        for (var i = 0, len = lineList.length; i < len; i++) {
-            if (lineCode == lineList[i].lineCode) {
-                inSystem = true;
-                break;
-            }
-        }
-        return inSystem;
-    },
+    // isLineInSystem (lineCode) {
+    //     let lineList = this.lineWarning.lines
+    //     let inSystem = false
+    //     for (var i = 0, len = lineList.length; i < len; i++) {
+    //         if (lineCode == lineList[i].lineCode) {
+    //             inSystem = true;
+    //             break;
+    //         }
+    //     }
+    //     return inSystem;
+    // },
     focusline (line, code) {
-        let inSystem = this.isLineInSystem(code)
-        if (!inSystem) {
-            alert(this.notInSystemMsg)
-            return false;
-        }
+        // let inSystem = this.isLineInSystem(code)
+        // if (!inSystem) {
+        //     alert(this.notInSystemMsg)
+        //     return false;
+        // }
 
         if (this.curLineName !== line) {
           
@@ -1965,21 +1974,14 @@ export default {
 
         if (nodeName === 'circle'  || nodeName === 'image') {
             sdata = $event.attr('sdata')
-            let num = $event.attr('code');
-            let code = this.getCode(num);
-            let isInSystem = this.isLineInSystem(code.lineCode);
-
-
-            if (!isInSystem) {
-                return false;
-            }
             let isDisabled = $event.attr('disable')
             if (isDisabled) {
                 return false;
             }
 
             if (sdata) {
-                !this.isHoverStation && this.setStationInfo(sdata, evnet.clientX, evnet.clientY)
+                let position = $event[0].getBoundingClientRect()
+                !this.isHoverStation && this.setStationInfo(sdata, position.left, position.top)
 
                 this.isHoverStation = true
             } else {
@@ -1989,23 +1991,23 @@ export default {
             this.isHoverStation = false
         }
     },
-    getCode (num) {        
-        let reg = /\w{2}/g;
-        let code = Number(num).toString(16);
-        code = code.length == 8 ? code : '0' + code
-        let arr = code.match(reg);
-        let lineCode = parseInt(arr[2], 16);
-        let stationCode = parseInt(arr[3], 16);
-        stationCode = lineCode + '' + stationCode;
+    // getCode (num) {        
+    //     let reg = /\w{2}/g;
+    //     let code = Number(num).toString(16);
+    //     code = code.length == 8 ? code : '0' + code
+    //     let arr = code.match(reg);
+    //     let lineCode = parseInt(arr[2], 16);
+    //     let stationCode = parseInt(arr[3], 16);
+    //     stationCode = lineCode + '' + stationCode;
 
-        lineCode = lineCode < 10 ? '0' + lineCode : lineCode;
-        stationCode = stationCode < 1000 ? '0' + stationCode : stationCode;
+    //     lineCode = lineCode < 10 ? '0' + lineCode : lineCode;
+    //     stationCode = stationCode < 1000 ? '0' + stationCode : stationCode;
 
-        return {
-            lineCode: lineCode,
-            stationCode: stationCode
-        }
-    },
+    //     return {
+    //         lineCode: lineCode,
+    //         stationCode: stationCode
+    //     }
+    // },
     chooseStation (evnet) {
         let $event = $(event.target)
         let nodeName = $event[0].nodeName
@@ -2016,16 +2018,9 @@ export default {
         if (nodeName === 'circle'  || nodeName === 'image') {
             num = $event.attr('code')
             if (num) {
-                let code = this.getCode(num);
                 let stationName = $event.attr('sdata');
 								let isDisabled = $event.attr('disable')
 								let isTurn = $event.attr('isTurn')
-                let isInSystem = this.isLineInSystem(code.lineCode)
-
-                // if (!isInSystem) {
-                //     alert(this.notInSystemMsg)
-                //     return false;
-                // }
 
                 if (isDisabled) {
                     alert('该站点暂未开通使用！')
@@ -2049,8 +2044,6 @@ export default {
             this.isAllStation = true
             this.curLineName = ''
         }
-
-
 		},
 		chooseTurnStation (index) {
 			var stationInfo = this.stationInfo
@@ -2141,6 +2134,7 @@ export default {
 }
 
 #station-hover {
+    display: none;
     width: 2px;
     height: 2px;
     position: absolute;
@@ -2148,10 +2142,15 @@ export default {
     left: 0px;
     top: 0px;
 
+    &.active,
+    &:hover {
+      display: block;
+    }
+
     >.station-hover-wrap {
         position: absolute;
-        left: 3px;
-        bottom: 6px;
+        left: 5px;
+        bottom: 0;
         min-width: 120px;
         padding: 15px;
         text-align: left;
