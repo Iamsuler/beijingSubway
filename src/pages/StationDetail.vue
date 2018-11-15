@@ -131,9 +131,9 @@
                 <table class="newest-table">
                     <tbody>
                       <tr class="newest-row" v-for="(item, index) in warningList" :key="index">
-                          <td :style="{background: colorList[item.level - 1]}">{{levelNameList[item.level - 1]}}</td>
+                          <td :style="{background: colorList[item.level]}">{{levelNameList[item.level]}}</td>
                           <td class="table-time">{{item.time}}</td>
-                          <td>{{item.brand}}</td>
+                          <td>{{item.brandDesc}}</td>
                           <td>{{item.device}}</td>
                           <td>{{item.deviceName}}</td>
                           <td>{{item.remark}}</td>
@@ -204,22 +204,22 @@ export default {
       normalDeviceCount: 0,
 
       timer: null,
-      colorList: [
-        "#f00",
-        "#64427d",
-        "#ffc200",
-        "#fbff00",
-        "#4d98db",
-        "#808080"
-      ],
-      levelNameList: [
-        "紧急报警",
-        "事故报警",
-        "普通报警",
-        "趋势报警",
-        "初始报警",
-        "设备故障报警"
-      ],
+      colorList: {
+        1: "#f00",
+        2: "#64427d",
+        3: "#ffc200",
+        4: "#fbff00",
+        5: "#4d98db",
+        6: "#808080"
+      },
+      levelNameList: {
+        1: "紧急报警",
+        2: "事故报警",
+        3: "普通报警",
+        4: "趋势报警",
+        5: "初始报警",
+        6: "设备故障报警"
+      },
       deviceStatusNames: {
         '9000': '未知 ',
         '9001': '急停 ',
@@ -664,7 +664,7 @@ export default {
     content: "";
     display: block;
     width: 100%;
-    height: 140px;
+    height: 170px;
   }
 }
 
@@ -801,8 +801,8 @@ export default {
 .foot {
   display: flex;
   justify-content: space-between;
-  height: 140px;
-  margin-top: -140px;
+  height: 170px;
+  margin-top: -170px;
   padding: 10px 100px;
   background-color: #d9dbde;
 

@@ -77,6 +77,12 @@
                               </div>
                           </li>
                           <li class="search-item">
+                              <div class="search-item-title">设备编号：</div>
+                              <div class="serach-item-label">
+                                  <input class="serach-item-input" type="text" placeholder="请输入要查询的设备编号" v-model="filterDeviceNo">
+                              </div>
+                          </li>
+                          <li class="search-item">
                               <div class="search-item-title"></div>
                               <div class="serach-item-label">
                                   <button class="btn" @click="filterDate">确认</button>
@@ -87,7 +93,7 @@
 
                   <div class="result">
                       <div class="result-title">报警信息{{allWarningCount}}条：</div>
-                      <table class="resut-table">
+                      <!-- <table class="resut-table">
                           <thead>
                               <tr>
                                   <th>优先级</th>
@@ -102,7 +108,7 @@
                           </thead>
                           <tbody>
                               <tr v-for="(item, index) in warningList" :key="index">
-                                  <td :style="{background: colorList[item.level - 1]}">{{levelNameList[item.level - 1]}}</td>
+                                  <td :style="{background: colorList[item.level]}">{{levelNameList[item.level]}}</td>
                                   <td class="table-time">{{item.time}}</td>
                                   <td>{{item.brand}}</td>
                                   <td>{{item.device}}</td>
@@ -115,12 +121,46 @@
                                   </td>
                               </tr>
                           </tbody>
-                      </table>
-                  <!--    <ul class="pagination" v-show="warningList.length > 0">
-                          <li @click="pageTurning(-1)" :class="{'disabled': curPage === 1}">上一页</li>
-                          <li v-for="item in allPage" :class="{'disabled': curPage === item}" :key="item" @click="setPage(item)">{{item}}</li>
-                          <li @click="pageTurning(1)" :class="{'disabled': curPage === allPage}">下一页</li>
-                      </ul> -->
+                      </table> -->
+                      <el-table
+                        :data="warningList"
+                        style="width: 100%"
+                        @sort-change="sortChange"
+                        :row-class-name="tableRowClassName"
+                        >
+                        <el-table-column
+                          prop="level"
+                          label="优先级"
+                          sortable="custom"
+                          :formatter="levelFormatter">
+                        </el-table-column>
+                        <el-table-column
+                          prop="time"
+                          label="时间"
+                          sortable="custom">
+                        </el-table-column>
+                        <el-table-column
+                          prop="brandDesc"
+                          label="品牌">
+                        </el-table-column>
+                        <el-table-column
+                          prop="device"
+                          sortable="custom"
+                          label="设备编号">
+                        </el-table-column>
+                        <el-table-column
+                          prop="deviceName"
+                          label="设备名称">
+                        </el-table-column>
+                        <el-table-column
+                          prop="remark"
+                          label="报警信息">
+                        </el-table-column>
+                        <el-table-column
+                          prop="trackID"
+                          label="工单号">
+                        </el-table-column>
+                      </el-table>
                       <el-pagination v-show="allWarningCount > 0"
                           background
                           layout="prev, pager, next"
@@ -141,9 +181,9 @@
 // components
 import Vue from "vue";
 import DeviceModal from "../components/DeviceModal.vue";
-import { Pagination, DatePicker } from "element-ui";
+import { Pagination, DatePicker, Table, TableColumn } from "element-ui";
 
-Vue.use(Pagination).use(DatePicker);
+Vue.use(Pagination).use(DatePicker).use(Table).use(TableColumn);
 
 export default {
   name: "ErrorList",
@@ -173,24 +213,52 @@ export default {
       filterCondition: 0,
       lineList: [],
       stationList: [],
+      filterDeviceNo: '',
+      sortBy: 'time',
+      sortType: 'descending',
 
+      // warningList: [{
+      //   level: 2,
+      //   time: '2018-09-12',
+      //   brandDesc: '奥克斯',
+      //   device: 'ds-fre-43-f-fd',
+      //   deviceName: '的丰富日光灯管防守打法',
+      //   remark: '反而外国人挺好听任何一条',
+      //   trackID: 'fdgrhtrhrthrt'
+      // }, {
+      //   level: 1,
+      //   time: '2018-09-12',
+      //   brandDesc: '奥克斯',
+      //   device: 'ds-fre-43-f-fd',
+      //   deviceName: '的丰富日光灯管防守打法',
+      //   remark: '反而外国人挺好听任何一条',
+      //   trackID: 'fdgrhtrhrthrt'
+      // }, {
+      //   level: 3,
+      //   time: '2018-09-12',
+      //   brandDesc: '奥克斯',
+      //   device: 'ds-fre-43-f-fd',
+      //   deviceName: '的丰富日光灯管防守打法',
+      //   remark: '反而外国人挺好听任何一条',
+      //   trackID: 'fdgrhtrhrthrt'
+      // }],
       warningList: [],
-      colorList: [
-        "#f00",
-        "#64427d",
-        "#ffc200",
-        "#fbff00",
-        "#4d98db",
-        "#808080"
-      ],
-      levelNameList: [
-        "紧急报警",
-        "事故报警",
-        "普通报警",
-        "趋势报警",
-        "初始报警",
-        "设备故障报警"
-      ],
+      // colorList: {
+      //   1: "#f00",
+      //   2: "#64427d",
+      //   3: "#ffc200",
+      //   4: "#fbff00",
+      //   5: "#4d98db",
+      //   6: "#808080"
+      // },
+      levelNameList: {
+        1: "紧急报警",
+        2: "事故报警",
+        3: "普通报警",
+        4: "趋势报警",
+        5: "初始报警",
+        6: "设备故障报警"
+      },
       warningTimer: null,
       datePickerOptions: {
         disabledDate (time) {
@@ -229,6 +297,17 @@ export default {
     this.init();
   },
   methods: {
+    tableRowClassName (args) {
+      return `level-color${args.row.level}`
+    },
+    sortChange (args) {
+      this.sortBy = args.prop
+      this.sortType = args.order
+      this.getWarningList()
+    },
+    levelFormatter (row, column) {
+      return this.levelNameList[row.level]
+    },
     init() {
       let lineList = sessionStorage.getItem("lineList");
       if (lineList) {
@@ -275,14 +354,17 @@ export default {
     },
     getWarningList() {
       let data = {
+        lineCode: this.lineCode,
         level: this.filterDegree,
         startTime: this.startTime,
         endTime: this.endTime,
         elevatorType: this.filterType,
         status: this.filterCondition,
-        stationCode: this.stationCode
+        stationCode: this.stationCode,
+        deviceNo: this.filterDeviceNo,
+        sortBy: this.sortBy,
+        sortType: this.sortType
       }
-      data.lineCode = this.lineCode;
       let params = {
         serialNumber: this.$global().serialNumber,
         page: this.curPage,
@@ -302,23 +384,23 @@ export default {
       this.curPage = index;
       this.getWarningList();
     },
-    confirmWarning(index) {
-      let id = this.warningList[index].id;
-      let params = {
-        serialNumber: this.$global().serialNumber,
-        data: {
-          arrayId: [id]
-        }
-      };
-      this.$post("/subway/warning_confirm", params).then(res => {
-        if (res.code === "success") {
-          alert("确认成功！");
-          this.warningList[index].status = 1;
-        } else {
-          alert(res.message);
-        }
-      });
-    },
+    // confirmWarning(index) {
+    //   let id = this.warningList[index].id;
+    //   let params = {
+    //     serialNumber: this.$global().serialNumber,
+    //     data: {
+    //       arrayId: [id]
+    //     }
+    //   };
+    //   this.$post("/subway/warning_confirm", params).then(res => {
+    //     if (res.code === "success") {
+    //       alert("确认成功！");
+    //       this.warningList[index].status = 1;
+    //     } else {
+    //       alert(res.message);
+    //     }
+    //   });
+    // },
     goBack() {
       this.$router.go(-1);
     },
@@ -414,6 +496,14 @@ body {
           border-radius: 5px;
           background-color: #fff;
         }
+
+        >.serach-item-input {
+          min-width: 200px;
+          height: 36px;
+          line-height: 36px;
+          padding-left: 10px;
+          font-size: 14px;
+        }
       }
 
       > .line-item-label {
@@ -427,9 +517,67 @@ body {
 
 .result {
   > .result-title {
-    padding-left: 20px;
     color: #808080;
     margin-bottom: 10px;
+  }
+
+  /deep/ .el-table {
+    th {
+      background-color: #e1e2e6;
+    }
+
+    td {
+      padding: 5px 0;
+    }
+
+    .level-color1 {
+      td {
+        &:first-child {
+          color: #fff;
+          background-color: #f00;
+        }
+      }
+    }
+    .level-color2 {
+      td {
+        &:first-child {
+          color: #fff;
+          background-color: #64427d;
+        }
+      }
+    }
+    .level-color3 {
+      td {
+        &:first-child {
+          color: #fff;
+          background-color: #ffc200;
+        }
+      }
+    }
+    .level-color4 {
+      td {
+        &:first-child {
+          color: #fff;
+          background-color: #fbff00;
+        }
+      }
+    }
+    .level-color5 {
+      td {
+        &:first-child {
+          color: #fff;
+          background-color: #4d98db;
+        }
+      }
+    }
+    .level-color6 {
+      td {
+        &:first-child {
+          color: #fff;
+          background-color: #808080;
+        }
+      }
+    }
   }
 }
 .resut-table {

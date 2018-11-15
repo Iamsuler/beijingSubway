@@ -10,6 +10,7 @@ import 'element-ui/packages/theme-chalk/src/icon.scss'
 import 'element-ui/packages/theme-chalk/src/pagination.scss'
 import 'element-ui/packages/theme-chalk/src/date-picker.scss'
 import 'element-ui/packages/theme-chalk/src/button.scss'
+import 'element-ui/packages/theme-chalk/src/table.scss'
 import 'babel-polyfill'
 
 Vue.config.productionTip = false
