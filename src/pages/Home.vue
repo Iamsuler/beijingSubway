@@ -39,7 +39,7 @@
     <div class="condition" :class="{'active': isSlideAll}" v-if="isAllStation" @click="slidePanel(0)">
         <div class="condition-title">
             <i class="icon icon-overview"></i>
-            <span>整体运行状态</span>
+            <span>整体运行状态（{{ collectorStatus }}）</span>
             <i class="icon icon-darr"></i>
         </div>
         <div class="condition-body">
@@ -132,10 +132,9 @@ export default {
             normalCount: 0
         },
         errorStationList: [],
-
         timer: null,
-
-        notInSystemMsg: '该线路暂未接入系统，敬请期待...'
+        notInSystemMsg: '该线路暂未接入系统，敬请期待...',
+        collectorStatus: '在线'
     };
   },
   created() {
@@ -143,7 +142,8 @@ export default {
     this.getWarningOverview();
     this.getStationOverview();
     this.getWarningStations()
-    this.svgLoaded()
+    this.getCollectorStatus()
+    this.updateWarning()
   },
   methods: {
     init() {
@@ -1851,6 +1851,15 @@ export default {
             });
       });
     },
+    getCollectorStatus () {
+      this.$post('/subway/collector_status').then(res => {
+        if (res.code === 'success') {
+          this.collectorStatus = res.data.status === 1 ? '在线' : '断网'
+        } else {
+          alert(res.message)
+        }
+      })
+    },
     getStationOverview () {
         let data = {
             serialNumber: this.$global().serialNumber
@@ -1909,7 +1918,7 @@ export default {
         }
       })
     },
-    svgLoaded () {
+    updateWarning () {
       var that = this
       if (this.timer !== null) {
         clearInterval(this.timer)
@@ -1921,17 +1930,6 @@ export default {
 				// 页面定时刷新 ms
       }, 120000)
     },
-    // isLineInSystem (lineCode) {
-    //     let lineList = this.lineWarning.lines
-    //     let inSystem = false
-    //     for (var i = 0, len = lineList.length; i < len; i++) {
-    //         if (lineCode == lineList[i].lineCode) {
-    //             inSystem = true;
-    //             break;
-    //         }
-    //     }
-    //     return inSystem;
-    // },
     focusline (line, code) {
         // let inSystem = this.isLineInSystem(code)
         // if (!inSystem) {
@@ -1991,23 +1989,6 @@ export default {
             this.isHoverStation = false
         }
     },
-    // getCode (num) {        
-    //     let reg = /\w{2}/g;
-    //     let code = Number(num).toString(16);
-    //     code = code.length == 8 ? code : '0' + code
-    //     let arr = code.match(reg);
-    //     let lineCode = parseInt(arr[2], 16);
-    //     let stationCode = parseInt(arr[3], 16);
-    //     stationCode = lineCode + '' + stationCode;
-
-    //     lineCode = lineCode < 10 ? '0' + lineCode : lineCode;
-    //     stationCode = stationCode < 1000 ? '0' + stationCode : stationCode;
-
-    //     return {
-    //         lineCode: lineCode,
-    //         stationCode: stationCode
-    //     }
-    // },
     chooseStation (evnet) {
         let $event = $(event.target)
         let nodeName = $event[0].nodeName

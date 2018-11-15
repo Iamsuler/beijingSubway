@@ -118,7 +118,6 @@
                <ul class="preview-opr">
                     <!-- <li>退出</li>
                     <li>事项</li> -->
-                    <li>{{ collectorStatus }}</li>
                     <li @click="toggleVoice" class="icon-voice" :class="{'play': voicePlaying}">声音</li>
                 </ul>
                 <audio ref="warningVoice" id="voice" src="/static/data/warning_voice.mp3" loop></audio>
@@ -235,8 +234,7 @@ export default {
         '0': '未接入 '
       },
       voicePlaying: false,
-      isCanPlay: false,
-      collectorStatus: '在线'
+      isCanPlay: false
     };
   },
   mounted() {
@@ -244,7 +242,6 @@ export default {
     this.lineCode = this.$route.params.lineCode;
     this.getStationInfo();
     this.init();
-    this.getCollectorStatus()
     this.initDate();
   },
   methods: {
@@ -547,15 +544,6 @@ export default {
           this.toPause()
         }
       }
-    },
-    getCollectorStatus () {
-      this.$post('/subway/collector_status').then(res => {
-        if (res.code === 'success') {
-          this.collectorStatus = res.data.status === 1 ? '在线' : '断网'
-        } else {
-          alert(res.message)
-        }
-      })
     }
   },
   destroyed() {

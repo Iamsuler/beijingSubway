@@ -93,35 +93,6 @@
 
                   <div class="result">
                       <div class="result-title">报警信息{{allWarningCount}}条：</div>
-                      <!-- <table class="resut-table">
-                          <thead>
-                              <tr>
-                                  <th>优先级</th>
-                                  <th class="table-time">时间</th>
-                                  <th>品牌</th>
-                                  <th>设备编号</th>
-                                  <th>设备名称</th>
-                                  <th>报警信息</th>
-                                  <th>工单号</th>
-                                  <th>确认状态</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              <tr v-for="(item, index) in warningList" :key="index">
-                                  <td :style="{background: colorList[item.level]}">{{levelNameList[item.level]}}</td>
-                                  <td class="table-time">{{item.time}}</td>
-                                  <td>{{item.brand}}</td>
-                                  <td>{{item.device}}</td>
-                                  <td>{{item.deviceName}}</td>
-                                  <td>{{item.remark}}</td>
-                                  <td>{{item.trackID}}</td>
-                                  <td>
-                                      <button v-if="item.status == 2" key="unconfirmed" @click="confirmWarning(index)">确认</button>
-                                      <button v-else key="confirmed" class="checked">已确认</button>
-                                  </td>
-                              </tr>
-                          </tbody>
-                      </table> -->
                       <el-table
                         :data="warningList"
                         style="width: 100%"
@@ -243,14 +214,6 @@ export default {
       //   trackID: 'fdgrhtrhrthrt'
       // }],
       warningList: [],
-      // colorList: {
-      //   1: "#f00",
-      //   2: "#64427d",
-      //   3: "#ffc200",
-      //   4: "#fbff00",
-      //   5: "#4d98db",
-      //   6: "#808080"
-      // },
       levelNameList: {
         1: "紧急报警",
         2: "事故报警",
@@ -384,23 +347,6 @@ export default {
       this.curPage = index;
       this.getWarningList();
     },
-    // confirmWarning(index) {
-    //   let id = this.warningList[index].id;
-    //   let params = {
-    //     serialNumber: this.$global().serialNumber,
-    //     data: {
-    //       arrayId: [id]
-    //     }
-    //   };
-    //   this.$post("/subway/warning_confirm", params).then(res => {
-    //     if (res.code === "success") {
-    //       alert("确认成功！");
-    //       this.warningList[index].status = 1;
-    //     } else {
-    //       alert(res.message);
-    //     }
-    //   });
-    // },
     goBack() {
       this.$router.go(-1);
     },
