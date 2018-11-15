@@ -452,7 +452,10 @@ export default {
           startTime: '',
           endTime: '',
           elevatorType: 0,
-          status: 0
+          status: 0,
+          deviceNo: '',
+          sortBy: 'time',
+          sortType: 'descending'
         }
       };
       this.$post("/subway/warning_list", data).then(res => {
