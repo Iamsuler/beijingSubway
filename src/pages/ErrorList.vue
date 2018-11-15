@@ -124,7 +124,7 @@
                           label="设备名称">
                         </el-table-column>
                         <el-table-column
-                          prop="id"
+                          prop="remarks"
                           label="报警编号">
                         </el-table-column>
                         <el-table-column

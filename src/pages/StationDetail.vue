@@ -135,7 +135,7 @@
                           <td>{{item.brandDesc}}</td>
                           <td>{{item.device}}</td>
                           <td>{{item.deviceName}}</td>
-                          <td>{{item.id}}</td>
+                          <td>{{item.remarks}}</td>
                           <td>{{item.remark}}</td>
                           <td>{{item.trackID}}</td>
                           <td>
