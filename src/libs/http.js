@@ -1,24 +1,21 @@
-import axios from 'axios';
+import axios from 'axios'
 
-axios.defaults.timeout = 50000;
+axios.defaults.timeout = 50000
 // axios.defaults.baseURL = 'http://120.55.41.122:9111';
 axios.defaults.headers['Content-type'] = 'application/json'
-
-
 
 //http request 拦截器
 axios.interceptors.request.use(
   config => {
-    const token = sessionStorage.getItem('access_token');
-    if(token){
+    const token = sessionStorage.getItem('access_token')
+    if (token) {
       config.headers.Authorization = 'Bearer ' + token
     }
-    return config;
-  },
-  error => {
-    return Promise.reject(err);
+    return config
+  }, error => {
+    return Promise.reject(err)
   }
-);
+)
 
 
 //http response 拦截器
@@ -45,20 +42,17 @@ axios.interceptors.request.use(
  * @returns {Promise}
  */
 
-export function get(url,params={}){
-  return new Promise((resolve,reject) => {
-    axios.get(url,{
-      params: params,
-    })
-    .then(response => {
-      resolve(response.data);
-    })
-    .catch(err => {
+export function get (url, params = {}) {
+  return new Promise((resolve, reject) => {
+    axios.get(url, {
+      params: params
+    }).then(response => {
+      resolve(response.data)
+    }).catch(err => {
       reject(err)
     })
   })
 }
-
 
 /**
  * 封装post请求
@@ -67,16 +61,15 @@ export function get(url,params={}){
  * @returns {Promise}
  */
 
- export function post(url,data = {}){
-   return new Promise((resolve,reject) => {
-     axios.post(`${process.env.ROOT_API}${url}`,data)
-          .then(response => {
-            resolve(response.data);
-          },err => {
-            reject(err)
-          })
-   })
- }
+export function post (url, data = {}) {
+  return new Promise((resolve, reject) => {
+    axios.post(`${process.env.ROOT_API}${url}`, data).then(response => {
+      resolve(response.data)
+    }, err => {
+      reject(err)
+    })
+  })
+}
 
  /**
  * 封装patch请求

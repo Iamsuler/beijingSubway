@@ -1950,13 +1950,13 @@ export default {
             data: {
                 lineCode: code
             }
-        }
-        this.$post('/subway/wraning_line', data).then(res => {
+          }
+          this.$post('/subway/wraning_line', data).then(res => {
             if (res.code === 'success') {
-              this.curLineCondition = res.data
-        } else {
-          alert(res.message)
-        }
+            this.curLineCondition = res.data
+          } else {
+            alert(res.message)
+          }
         })
 
 

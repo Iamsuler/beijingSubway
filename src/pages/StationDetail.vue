@@ -119,7 +119,7 @@
                     <!-- <li>退出</li>
                     <li>事项</li> -->
                     <li>{{ collectorStatus }}</li>
-                    <li @click="toggleVoice('toggle')">声音（{{ voiceBtnTxt }}）</li>
+                    <li @click="toggleVoice" class="icon-voice" :class="{'play': voicePlaying}">声音</li>
                 </ul>
                 <audio ref="warningVoice" id="voice" src="/static/data/warning_voice.mp3" loop></audio>
             </div>
@@ -234,7 +234,7 @@ export default {
         '9010': '节能 ',
         '0': '未接入 '
       },
-      voiceBtnTxt: '开',
+      voicePlaying: false,
       isCanPlay: false,
       collectorStatus: '在线'
     };
@@ -532,20 +532,19 @@ export default {
     },
     toPlay () {
       this.$refs.warningVoice.play()
-      this.voiceBtnTxt = '关'
+      this.voicePlaying = true
     },
     toPause () {
       this.$refs.warningVoice.pause()
-      this.voiceBtnTxt = '开'
+      this.voicePlaying = false
     },
     toggleVoice () {
-      this.isCanPlay = true
-      if (this.voiceBtnTxt === '关') {
-        this.toPause()
-      } else if (this.voiceBtnTxt === '开') {
-        this.voiceBtnTxt = '关'
-        if (this.warningDeviceCount > 0) {
+      this.voicePlaying = !this.voicePlaying
+      if (this.warningDeviceCount > 0) {
+        if (this.voicePlaying) {
           this.toPlay()
+        } else {
+          this.toPause()
         }
       }
     },
@@ -835,6 +834,15 @@ export default {
 
         &:not(:last-child) {
           margin-right: 5px;
+        }
+      }
+
+      >.icon-voice {
+        padding-right: 30px;
+        background: #525766 url("../assets/icon_voice_pause.png") 43px center / 16px 16px no-repeat;
+
+        &.play {
+          background-image: url("../assets/icon_voice_play.png");
         }
       }
     }
