@@ -100,7 +100,7 @@
                         :row-class-name="tableRowClassName"
                         >
                         <el-table-column
-                          prop="level"
+                          prop="failureLevel"
                           label="优先级"
                           sortable="custom"
                           :formatter="levelFormatter">
@@ -265,7 +265,7 @@ export default {
   },
   methods: {
     tableRowClassName (args) {
-      return `level-color${args.row.level}`
+      return `level-color${args.row.failureLevel}`
     },
     sortChange (args) {
       this.sortBy = args.prop
@@ -273,7 +273,7 @@ export default {
       this.getWarningList()
     },
     levelFormatter (row, column) {
-      return this.levelNameList[row.level]
+      return this.levelNameList[row.failureLevel]
     },
     init() {
       let lineList = sessionStorage.getItem("lineList");

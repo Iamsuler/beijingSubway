@@ -130,7 +130,7 @@
                 <table class="newest-table">
                     <tbody>
                       <tr class="newest-row" v-for="(item, index) in warningList" :key="index">
-                          <td :style="{background: colorList[item.level]}">{{levelNameList[item.level]}}</td>
+                          <td :style="{background: colorList[item.failureLevel]}">{{levelNameList[item.failureLevel]}}</td>
                           <td class="table-time">{{item.time}}</td>
                           <td>{{item.brandDesc}}</td>
                           <td>{{item.device}}</td>
