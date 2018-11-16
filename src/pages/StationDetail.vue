@@ -118,7 +118,7 @@
                <ul class="preview-opr">
                     <!-- <li>退出</li>
                     <li>事项</li> -->
-                    <li @click="toggleVoice" class="icon-voice" :class="{'play': voicePlaying}">声音</li>
+                    <li class="voice-wrap" @click="toggleVoice">声音<i class="icon-voice" :class="{'play': voicePlaying}"></i></li>
                 </ul>
                 <audio ref="warningVoice" id="voice" src="/static/data/warning_voice.mp3" loop></audio>
             </div>
@@ -128,16 +128,29 @@
                     <p @click="toErrorList">全部报警  &gt;</p>
                 </div>
                 <table class="newest-table">
+                    <thead>
+                        <tr>
+                            <th>优先级</th>
+                            <th class="table-time">时间</th>
+                            <th>品牌</th>
+                            <th>设备编号</th>
+                            <th>设备名称</th>
+                            <th>报警编号</th>
+                            <th>报警信息</th>
+                            <th>工单号</th>
+                            <th>确认状态</th>
+                        </tr>
+                    </thead>
                     <tbody>
                       <tr class="newest-row" v-for="(item, index) in warningList" :key="index">
                           <td :style="{background: colorList[item.failureLevel]}">{{levelNameList[item.failureLevel]}}</td>
                           <td class="table-time">{{item.time}}</td>
-                          <td>{{item.brandDesc}}</td>
-                          <td>{{item.device}}</td>
-                          <td>{{item.deviceName}}</td>
-                          <td>{{item.remarks}}</td>
-                          <td>{{item.remark}}</td>
-                          <td>{{item.trackID}}</td>
+                          <td :title="item.brandDesc">{{item.brandDesc}}</td>
+                          <td :title="item.device">{{item.device}}</td>
+                          <td :title="item.deviceName">{{item.deviceName}}</td>
+                          <td :title="item.remarks">{{item.remarks}}</td>
+                          <td :title="item.remark">{{item.remark}}</td>
+                          <td :title="item.trackID">{{item.trackID}}</td>
                           <td>
                               <button v-if="item.status == 2" key="unconfirmed" @click="confirmWarning(index)">确认</button>
                               <button v-else key="confirmed" class="disabled">已确认</button>
@@ -176,6 +189,35 @@ export default {
       deviceId: "",
 
       warningList: [],
+      // warningList: [{
+      //   failureLevel: 2,
+      //   time: '2018-09-12',
+      //   brandDesc: '奥克斯',
+      //   device: 'ds-fre-43-f-fd',
+      //   deviceName: '的丰富日光灯管防守打法',
+      //   remark: '反而外国人挺好听任何一条',
+      //   remarks: 1202,
+      //   trackID: 'fdgrhtrhrthrt'
+      // }, {
+      //   failureLevel: 1,
+      //   time: '2018-09-12',
+      //   brandDesc: '奥克斯',
+      //   device: 'ds-fre-43-f-fd',
+      //   deviceName: '的丰富日光灯管防守打法',
+      //   remark: '反而外国人挺好听任何一条',
+      //   remarks: 1203,
+      //   trackID: 'fdgrhtrhrthrt'
+      // }, {
+      //   failureLevel: 3,
+      //   time: '2018-09-12',
+      //   brandDesc: '奥克斯',
+      //   device: 'ds-fre-43-f-fd',
+      //   deviceName: '的丰富日光灯管防守打法',
+      //   remarks: 1204,
+      //   status: 2,
+      //   remark: '反而外国人挺好听任何一条',
+      //   trackID: 'fdgrhtrhrthrt'
+      // }],
       // 出口和站台设备
       southeastList: [],
       northeastList: [],
@@ -655,7 +697,7 @@ export default {
     content: "";
     display: block;
     width: 100%;
-    height: 170px;
+    height: 195px;
   }
 }
 
@@ -792,8 +834,8 @@ export default {
 .foot {
   display: flex;
   justify-content: space-between;
-  height: 170px;
-  margin-top: -170px;
+  height: 195px;
+  margin-top: -195px;
   padding: 10px 100px;
   background-color: #d9dbde;
 
@@ -826,12 +868,18 @@ export default {
         }
       }
 
-      >.icon-voice {
-        padding-right: 30px;
-        background: #525766 url("../assets/icon_voice_pause.png") 43px center / 16px 16px no-repeat;
+      >.voice-wrap {
+        display: flex;
+        align-items: center;
+        >.icon-voice {
+          margin-left: 5px;
+          width: 16px;
+          height: 16px;
+          background: url("../assets/icon_voice_pause.png") center center / 16px 16px no-repeat;
 
-        &.play {
-          background-image: url("../assets/icon_voice_play.png");
+          &.play {
+            background-image: url("../assets/icon_voice_play.png");
+          }
         }
       }
     }
@@ -852,7 +900,7 @@ export default {
   }
 
   > .newest {
-    width: 1000px;
+    width: 1300px;
 
     > .newest-title {
       display: flex;
@@ -877,6 +925,17 @@ export default {
   width: 100%;
   background-color: #d2d4d7;
   border-collapse: collapse;
+  table-layout: fixed;
+  text-align: center;
+  cursor: default;
+
+  >thead {
+    >tr {
+      height: 36px;
+      line-height: 36px;
+      background-color: #e1e2e6;
+    }
+  }
 
   .newest-row {
     height: 36px;
@@ -886,18 +945,20 @@ export default {
     }
 
     > td {
+      height: 36px;
+      line-height: 36px;
+      padding: 0 8px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
       &:first-child {
         text-align: center;
       }
-      &:last-child {
-        padding-right: 40px;
-        text-align: right;
-      }
     }
 
-    > .table-time {
-      padding-left: 20px;
-    }
+    // > .table-time {
+    //   padding-left: 20px;
+    // }
 
     button {
       width: 52px;

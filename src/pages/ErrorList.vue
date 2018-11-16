@@ -193,7 +193,7 @@ export default {
       sortType: 'descending',
 
       // warningList: [{
-      //   level: 2,
+      //   failureLevel: 2,
       //   time: '2018-09-12',
       //   brandDesc: '奥克斯',
       //   device: 'ds-fre-43-f-fd',
@@ -201,7 +201,7 @@ export default {
       //   remark: '反而外国人挺好听任何一条',
       //   trackID: 'fdgrhtrhrthrt'
       // }, {
-      //   level: 1,
+      //   failureLevel: 1,
       //   time: '2018-09-12',
       //   brandDesc: '奥克斯',
       //   device: 'ds-fre-43-f-fd',
@@ -209,7 +209,7 @@ export default {
       //   remark: '反而外国人挺好听任何一条',
       //   trackID: 'fdgrhtrhrthrt'
       // }, {
-      //   level: 3,
+      //   failureLevel: 3,
       //   time: '2018-09-12',
       //   brandDesc: '奥克斯',
       //   device: 'ds-fre-43-f-fd',
