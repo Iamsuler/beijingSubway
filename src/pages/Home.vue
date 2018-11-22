@@ -138,6 +138,10 @@ export default {
     };
   },
   created() {
+    let userId = this.$route.query.userid || ''
+    let userEmpcode = this.$route.query.user_empcode || ''
+    sessionStorage.setItem('userId', userId)
+    sessionStorage.setItem('userEmpcode', userEmpcode)
     this.init();
     this.getWarningOverview();
     this.getStationOverview();

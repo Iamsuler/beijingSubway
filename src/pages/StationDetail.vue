@@ -181,6 +181,9 @@ export default {
   },
   data() {
     return {
+      // user
+      userId: '',
+      userEmpcode: '',
       // 日期
       date: "",
       weekDay: "",
@@ -284,6 +287,8 @@ export default {
   mounted() {
     this.stationCode = this.$route.params.stationCode;
     this.lineCode = this.$route.params.lineCode;
+    this.userId = sessionStorage.getItem('userId') || ''
+    this.userEmpcode = sessionStorage.getItem('userEmpcode') || ''
     this.getStationInfo();
     this.init();
     this.initDate();
@@ -559,7 +564,9 @@ export default {
       let params = {
         serialNumber: this.$global().serialNumber,
         data: {
-          arrayId: [id]
+          arrayId: [id],
+          userId: this.userId,
+          userEmpcode: this.userEmpcode
         }
       };
       this.$post("/subway/warning_confirm", params).then(res => {
