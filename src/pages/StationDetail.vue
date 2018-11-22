@@ -272,8 +272,9 @@ export default {
         '9006': '故障 ',
         '9007': '消防/火警 ',
         '9008': '待机 ',
-        '9009': '断网 ',
-        '9010': '节能 ',
+        '9009': 'Y-△运行模式 ',
+        '9010': '节能运行模式 ',
+        '9011': '断网 ',
         '0': '未接入 '
       },
       voicePlaying: false,
@@ -645,6 +646,9 @@ export default {
   &.condition9010 {
     background-image: url(../assets/elevator/icon_ft_jn.png);
   }
+  &.condition9011 {
+    background-image: url(../assets/elevator/icon_ft_y.png);
+  }
   &.condition0 {
     background-image: url(../assets/elevator/icon_ft_qt.png);
   }
@@ -684,6 +688,9 @@ export default {
   // &.condition9010 {
   //   background-image: url(../assets/elevator/icon_zt_jn.png);
   // }
+  &.condition9011 {
+    background-image: url(../assets/elevator/icon_zt_y.png);
+  }
   &.condition0 {
     background-image: url(../assets/elevator/icon_zt_qt.png);
   }
