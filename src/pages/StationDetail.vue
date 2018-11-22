@@ -648,13 +648,13 @@ export default {
     background-image: url(../assets/elevator/icon_ft_xf.png);
   }
   &.condition9009 {
-    background-image: url(../assets/elevator/icon_ft_dw.png);
+    background-image: url(../assets/elevator/icon_ft_y.png);
   }
   &.condition9010 {
     background-image: url(../assets/elevator/icon_ft_jn.png);
   }
   &.condition9011 {
-    background-image: url(../assets/elevator/icon_ft_y.png);
+    background-image: url(../assets/elevator/icon_ft_dw.png);
   }
   &.condition0 {
     background-image: url(../assets/elevator/icon_ft_qt.png);
@@ -690,13 +690,13 @@ export default {
     background-image: url(../assets/elevator/icon_zt_dj.png);
   }
   &.condition9009 {
-    background-image: url(../assets/elevator/icon_zt_dw.png);
+    background-image: url(../assets/elevator/icon_zt_y.png);
   }
   // &.condition9010 {
   //   background-image: url(../assets/elevator/icon_zt_jn.png);
   // }
   &.condition9011 {
-    background-image: url(../assets/elevator/icon_zt_y.png);
+    background-image: url(../assets/elevator/icon_zt_dw.png);
   }
   &.condition0 {
     background-image: url(../assets/elevator/icon_zt_qt.png);
