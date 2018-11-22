@@ -656,6 +656,12 @@ export default {
   &.condition9011 {
     background-image: url(../assets/elevator/icon_ft_dw.png);
   }
+  &.condition9012 {
+    background-image: url(../assets/elevator/icon_ft_jn.png);
+  }
+  &.condition9013 {
+    background-image: url(../assets/elevator/icon_ft_jn_down.png);
+  }
   &.condition0 {
     background-image: url(../assets/elevator/icon_ft_qt.png);
   }
