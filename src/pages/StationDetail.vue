@@ -56,7 +56,7 @@
                                       :key="device.deviceNo"
                                       class="icon-dt" :class="'icon-dt' + device.deviceType + ' ' + 'condition' + device.deviceStatus" 
                                       :title="deviceStatusNames[device.deviceStatus] + device.transformType + '类'"
-                                      @click="showDeviceDetail(device.deviceNo)">{{device.deviceNo}}</li>
+                                      @click="showDeviceDetail(device.deviceNo)">({{ device.transformType }}类){{device.deviceNo}}</li>
                                 </ul>
                             </div>
                         </div>
@@ -73,7 +73,7 @@
                                       :key="device.deviceNo" class="icon-dt"
                                       :class="'icon-dt' + device.deviceType + ' ' + 'condition' + device.deviceStatus"
                                       :title="deviceStatusNames[device.deviceStatus] + device.transformType + '类'"
-                                      @click="showDeviceDetail(device.deviceNo)">{{device.deviceNo}}</li>
+                                      @click="showDeviceDetail(device.deviceNo)">({{ device.transformType }}类){{device.deviceNo}}</li>
                                 </ul>
                             </div>
                         </div>
@@ -89,7 +89,7 @@
                                       :key="device.deviceNo"
                                       class="icon-dt" :class="'icon-dt' + device.deviceType + ' ' + 'condition' + device.deviceStatus"
                                       :title="deviceStatusNames[device.deviceStatus] + device.transformType + '类'"
-                                      @click="showDeviceDetail(device.deviceNo)">{{device.deviceNo}}</li>
+                                      @click="showDeviceDetail(device.deviceNo)">({{ device.transformType }}类){{device.deviceNo}}</li>
                                 </ul>
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                                       :key="device.deviceNo"
                                       class="icon-dt" :class="'icon-dt' + device.deviceType + ' ' + 'condition' + device.deviceStatus"
                                       :title="deviceStatusNames[device.deviceStatus] + device.transformType + '类'"
-                                      @click="showDeviceDetail(device.deviceNo)">{{device.deviceNo}}</li>
+                                      @click="showDeviceDetail(device.deviceNo)">({{ device.transformType }}类){{device.deviceNo}}</li>
                                 </ul>
                             </div>
                         </div>
