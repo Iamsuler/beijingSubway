@@ -112,16 +112,6 @@
             </div>
         </div>
         <div class="foot">
-            <div class="preview">
-                <p class="icon-error-triangle">报警</p>
-                <p>未确认：{{unconfirmedCount}} /  确认：{{confirmedCount}}</p>
-               <ul class="preview-opr">
-                    <!-- <li>退出</li>
-                    <li>事项</li> -->
-                    <li class="voice-wrap" @click="toggleVoice">声音<i class="icon-voice" :class="{'play': voicePlaying}"></i></li>
-                </ul>
-                <audio ref="warningVoice" id="voice" src="/static/data/warning_voice.mp3" loop></audio>
-            </div>
             <div class="newest">
                 <div class="newest-title">
                     <h3>最新报警</h3>
@@ -159,10 +149,17 @@
                     </tbody>
                 </table>
             </div>
-            <div class="user">
-            <!--    <p>操作员：王大伟  运维部</p> -->
-                <p>{{date}}  {{weekDay}}</p>
-                <p class="time">{{curTime}}</p>
+            <div class="preview">
+                <p class="icon-error-triangle">报警</p>
+                <p>未确认：{{unconfirmedCount}} /  确认：{{confirmedCount}}</p>
+                <ul class="preview-opr">
+                    <li class="voice-wrap" @click="toggleVoice">声音<i class="icon-voice" :class="{'play': voicePlaying}"></i></li>
+                </ul>
+                <div class="user">
+                    <p>{{date}}  {{weekDay}}</p>
+                    <p class="time">{{curTime}}</p>
+                </div>
+                <audio ref="warningVoice" id="voice" src="/static/data/warning_voice.mp3" loop></audio>
             </div>
         </div>
         <device-modal ref="device"></device-modal>
@@ -680,10 +677,10 @@ export default {
     background-image: url(../assets/elevator/icon_zt_out.png);
   }
   &.condition9003 {
-    background-image: url(../assets/elevator/icon_zt_up.png);
+    background-image: url(../assets/elevator/icon_zt_dj.png);
   }
   &.condition9004 {
-    background-image: url(../assets/elevator/icon_zt_down.png);
+    background-image: url(../assets/elevator/icon_zt_dj.png);
   }
   &.condition9005 {
     background-image: url(../assets/elevator/icon_zt_jx.png);
@@ -862,7 +859,10 @@ export default {
   background-color: #d9dbde;
 
   > .preview {
+    width: 140px;
+    padding-left: 20px;
     font-size: 13px;
+    overflow: hidden;
     > p {
       &:not(:last-child) {
         margin-bottom: 20px;
@@ -904,25 +904,26 @@ export default {
           }
         }
       }
+      
     }
-  }
+    > .user {
+      font-size: 13px;
+      line-height: 18px;
+      text-align: center;
+      margin-top: 20px;
 
-  > .user {
-    padding: 30px 30px;
-    font-size: 13px;
-    line-height: 18px;
-    text-align: center;
-
-    > .time {
-      line-height: 28px;
-      font-size: 20px;
-      margin-top: 10px;
-      color: #0a6bcc;
+      > .time {
+        line-height: 28px;
+        font-size: 20px;
+        margin-top: 10px;
+        color: #0a6bcc;
+      }
     }
   }
 
   > .newest {
-    width: 1300px;
+    width: 1570px;
+    overflow: hidden;
 
     > .newest-title {
       display: flex;
