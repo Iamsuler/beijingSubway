@@ -133,8 +133,11 @@
                     </thead>
                     <tbody>
                       <tr class="newest-row" v-for="(item, index) in warningList" :key="index">
-                          <td :style="{background: colorList[item.failureLevel]}">{{levelNameList[item.failureLevel]}}</td>
-                          <td class="table-time">{{item.time}}</td>
+                          <td
+                            :style="{background: colorList[item.failureLevel]}"
+                            :title="levelNameList[item.failureLevel]"
+                          >{{levelNameList[item.failureLevel]}}</td>
+                          <td :title="item.time" class="table-time">{{item.time}}</td>
                           <td :title="item.brandDesc">{{item.brandDesc}}</td>
                           <td :title="item.device">{{item.device}}</td>
                           <td :title="item.deviceName">{{item.deviceName}}</td>
