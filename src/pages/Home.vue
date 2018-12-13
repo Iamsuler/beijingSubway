@@ -56,6 +56,7 @@
                 </li>
             </ul>
         </div>
+        <time-part></time-part>
     </div>
     <div class="condition line-condition" :class="{'active': isSlideCur}" v-else @click="slidePanel(1)">
         <div class="condition-title">
@@ -76,6 +77,7 @@
                 </li>
             </ul>
         </div>
+        <time-part></time-part>
     </div>
   </div>
 </template>
@@ -86,10 +88,14 @@ import svgPanZoom from "svg-pan-zoom";
 import hammer from "hammerjs";
 import typeahead from "typeahead";
 import fullscreen from "fullscreen";
+import TimePart from '../components/TimePart'
 require("@/libs/subwaymap.js");
 
 export default {
   name: "home",
+  components: {
+    TimePart
+  },
   data() {
     return {
         stationInfo: {
@@ -2184,6 +2190,7 @@ export default {
   border-radius: 3px;
   box-shadow: 0 0 2px 0;
   overflow: hidden;
+  background-color: #fff;
   transition: all 0.5s linear;
 
   .error {
