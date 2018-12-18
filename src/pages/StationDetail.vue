@@ -128,7 +128,8 @@
                             <th>报警编号</th>
                             <th>报警信息</th>
                             <th>工单号</th>
-                            <th>确认状态</th>
+                            <th>状态</th>
+                            <th>操作</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -144,9 +145,16 @@
                           <td :title="item.remarks">{{item.remarks}}</td>
                           <td :title="item.remark">{{item.remark}}</td>
                           <td :title="item.trackID">{{item.trackID}}</td>
-                          <td>
-                              <button v-if="item.status == 2" key="unconfirmed" @click="confirmWarning(index)">确认</button>
-                              <button v-else key="confirmed" class="disabled">已确认</button>
+                          <td>{{item.statusText}}</td>
+                          <td class="btn-wrap">
+                              <button class="btn" @click="confirmWarning(index, 'send')" :disabled="item.status != 3">
+                                <span v-if="item.status == 1" key="send">已派单</span>
+                                <span v-else key="unSend">派单</span>
+                              </button>
+                              <button class="btn" @click="confirmWarning(index, 'cancel')" :disabled="item.status != 3">
+                                <span v-if="item.status == 2" key="cancel">已取消</span>
+                                <span v-else key="unCancel">取消</span>
+                              </button>
                           </td>
                       </tr>
                     </tbody>
@@ -154,7 +162,7 @@
             </div>
             <div class="preview">
                 <p class="icon-error-triangle">报警</p>
-                <p>未确认：{{unconfirmedCount}} /  确认：{{confirmedCount}}</p>
+                <p>未处理：{{unconfirmedCount}} /  处理：{{confirmedCount}}</p>
                 <ul class="preview-opr">
                     <li class="voice-wrap" @click="toggleVoice">声音<i class="icon-voice" :class="{'play': voicePlaying}"></i></li>
                 </ul>
@@ -193,6 +201,7 @@ export default {
 
       warningList: [],
       // warningList: [{
+      //   id: 1,
       //   failureLevel: 2,
       //   time: '2018-09-12',
       //   brandDesc: '奥克斯',
@@ -200,8 +209,11 @@ export default {
       //   deviceName: '的丰富日光灯管防守打法',
       //   remark: '反而外国人挺好听任何一条',
       //   remarks: 1202,
+      //   status: 1,
+      //   statusText: '已派单',
       //   trackID: 'fdgrhtrhrthrt'
       // }, {
+      //   id: 2,
       //   failureLevel: 1,
       //   time: '2018-09-12',
       //   brandDesc: '奥克斯',
@@ -209,15 +221,19 @@ export default {
       //   deviceName: '的丰富日光灯管防守打法',
       //   remark: '反而外国人挺好听任何一条',
       //   remarks: 1203,
+      //   status: 2,
+      //   statusText: '已取消',
       //   trackID: 'fdgrhtrhrthrt'
       // }, {
+      //   id: 3,
       //   failureLevel: 3,
       //   time: '2018-09-12',
       //   brandDesc: '奥克斯',
       //   device: 'ds-fre-43-f-fd',
       //   deviceName: '的丰富日光灯管防守打法',
       //   remarks: 1204,
-      //   status: 2,
+      //   status: 3,
+      //   statusText: '未处理',
       //   remark: '反而外国人挺好听任何一条',
       //   trackID: 'fdgrhtrhrthrt'
       // }],
@@ -561,24 +577,30 @@ export default {
         }
       });
     },
-    confirmWarning(index) {
+    confirmWarning(index, type) {
       let id = this.warningList[index].id;
-      let params = {
-        serialNumber: this.$global().serialNumber,
-        data: {
-          arrayId: [id],
-          userId: this.userId,
-          userEmpcode: this.userEmpcode
-        }
-      };
-      this.$post("/subway/warning_confirm", params).then(res => {
-        if (res.code === "success") {
-          alert("确认成功！");
-          this.warningList[index].status = 1;
-        } else {
-          alert(res.message);
-        }
-      });
+      let confirmText = type === 'send' ? '派单' : '取消报警'
+      let confirmStatus = window.confirm(`请确认是否${confirmText}`)
+      if (confirmStatus) {
+        let params = {
+          serialNumber: this.$global().serialNumber,
+          data: {
+            arrayId: [id],
+            opr: type,
+            userId: this.userId,
+            userEmpcode: this.userEmpcode
+          }
+        };
+        this.$post("/subway/warning_confirm", params).then(res => {
+          if (res.code === "success") {
+            alert(`${confirmText}成功`)
+            this.warningList[index].status = res.data.status;
+            this.warningList[index].statusText = res.data.statusText;
+          } else {
+            alert(res.message);
+          }
+        });
+      }
     },
     toPlay () {
       this.$refs.warningVoice.play()
@@ -985,22 +1007,6 @@ export default {
     // > .table-time {
     //   padding-left: 20px;
     // }
-
-    button {
-      width: 52px;
-      height: 24px;
-      line-height: 24px;
-      text-align: center;
-      background-color: #fff;
-      box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2);
-      border-radius: 2px;
-      cursor: pointer;
-    }
-
-    .disabled {
-      cursor: default;
-      background-color: #dedede;
-    }
   }
 }
 

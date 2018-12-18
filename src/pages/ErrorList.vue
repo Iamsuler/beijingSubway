@@ -72,8 +72,9 @@
                               <div class="search-item-title">报警状态：</div>
                               <div class="serach-item-label">
                                   <label><input name="condition" type="radio" v-model="filterCondition" value="0">全部</label>
-                                  <label><input name="condition" type="radio" v-model="filterCondition" value="1">已确认</label>
-                                  <label><input name="condition" type="radio" v-model="filterCondition" value="2">未确认</label>
+                                  <label><input name="condition" type="radio" v-model="filterCondition" value="1">已派单</label>
+                                  <label><input name="condition" type="radio" v-model="filterCondition" value="2">已取消</label>
+                                  <label><input name="condition" type="radio" v-model="filterCondition" value="3">未处理</label>
                               </div>
                           </li>
                           <li class="search-item">
@@ -135,6 +136,26 @@
                           prop="trackID"
                           label="工单号">
                         </el-table-column>
+                        <el-table-column
+                          prop="statusText"
+                          label="状态">
+                        </el-table-column>
+                        <el-table-column
+                          class-name="btn-wrap"
+                          label="操作"
+                          align="center"
+                          width="140">
+                          <template slot-scope="scope">
+                            <button class="btn" @click="confirmWarning(scope.$index, 'send')" :disabled="scope.row.status != 3">
+                              <span v-if="scope.row.status == 1" key="send">已派单</span>
+                              <span v-else key="unSend">派单</span>
+                            </button>
+                            <button class="btn" @click="confirmWarning(scope.$index, 'cancel')" :disabled="scope.row.status != 3">
+                              <span v-if="scope.row.status == 2" key="cancel">已取消</span>
+                              <span v-else key="unCancel">取消</span>
+                            </button>
+                          </template>
+                        </el-table-column>
                       </el-table>
                       <el-pagination v-show="allWarningCount > 0"
                           background
@@ -192,32 +213,44 @@ export default {
       sortBy: 'time',
       sortType: 'descending',
 
+      warningList: [],
       // warningList: [{
+      //   id: 1,
       //   failureLevel: 2,
       //   time: '2018-09-12',
       //   brandDesc: '奥克斯',
       //   device: 'ds-fre-43-f-fd',
       //   deviceName: '的丰富日光灯管防守打法',
       //   remark: '反而外国人挺好听任何一条',
+      //   remarks: 1202,
+      //   status: 1,
+      //   statusText: '已派单',
       //   trackID: 'fdgrhtrhrthrt'
       // }, {
+      //   id: 2,
       //   failureLevel: 1,
       //   time: '2018-09-12',
       //   brandDesc: '奥克斯',
       //   device: 'ds-fre-43-f-fd',
       //   deviceName: '的丰富日光灯管防守打法',
       //   remark: '反而外国人挺好听任何一条',
+      //   remarks: 1203,
+      //   status: 2,
+      //   statusText: '已取消',
       //   trackID: 'fdgrhtrhrthrt'
       // }, {
+      //   id: 3,
       //   failureLevel: 3,
       //   time: '2018-09-12',
       //   brandDesc: '奥克斯',
       //   device: 'ds-fre-43-f-fd',
       //   deviceName: '的丰富日光灯管防守打法',
+      //   remarks: 1204,
+      //   status: 3,
+      //   statusText: '未处理',
       //   remark: '反而外国人挺好听任何一条',
       //   trackID: 'fdgrhtrhrthrt'
       // }],
-      warningList: [],
       levelNameList: {
         1: "紧急报警",
         2: "事故报警",
@@ -264,6 +297,31 @@ export default {
     this.init();
   },
   methods: {
+    confirmWarning(index, type) {
+      let id = this.warningList[index].id;
+      let confirmText = type === 'send' ? '派单' : '取消报警'
+      let confirmStatus = window.confirm(`请确认是否${confirmText}`)
+      if (confirmStatus) {
+        let params = {
+          serialNumber: this.$global().serialNumber,
+          data: {
+            arrayId: [id],
+            opr: type,
+            userId: this.userId,
+            userEmpcode: this.userEmpcode
+          }
+        };
+        this.$post("/subway/warning_confirm", params).then(res => {
+          if (res.code === "success") {
+            alert(`${confirmText}成功`)
+            this.warningList[index].status = res.data.status;
+            this.warningList[index].statusText = res.data.statusText;
+          } else {
+            alert(res.message);
+          }
+        });
+      }
+    },
     tableRowClassName (args) {
       return `level-color${args.row.failureLevel}`
     },
@@ -394,7 +452,7 @@ body {
 .error-wrap {
   display: flex;
   flex-direction: column;
-  width: 1000px;
+  width: 1200px;
   margin: 0 auto;
   padding-top: 30px;
 
@@ -427,10 +485,14 @@ body {
       }
 
       > .serach-item-label {
-        display: flex;
-        flex-wrap: wrap;
+        width: 980px;
+        max-width: 980px;
+        padding-left: 5px;
+        overflow: hidden;
 
         > label {
+          float: left;
+          width: 170px;
           min-width: 170px;
           height: 20px;
           margin-bottom: 7px;
