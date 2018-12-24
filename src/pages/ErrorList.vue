@@ -104,16 +104,19 @@
                           prop="failureLevel"
                           label="优先级"
                           sortable="custom"
-                          :formatter="levelFormatter">
+                          :formatter="levelFormatter"
+                          width="120">
                         </el-table-column>
                         <el-table-column
                           prop="time"
                           label="时间"
-                          sortable="custom">
+                          sortable="custom"
+                          width="160">
                         </el-table-column>
                         <el-table-column
                           prop="brandDesc"
-                          label="品牌">
+                          label="品牌"
+                          width="100">
                         </el-table-column>
                         <el-table-column
                           prop="device"
@@ -126,7 +129,8 @@
                         </el-table-column>
                         <el-table-column
                           prop="remarks"
-                          label="报警编号">
+                          label="报警编号"
+                          width="80">
                         </el-table-column>
                         <el-table-column
                           prop="remark"
@@ -134,11 +138,13 @@
                         </el-table-column>
                         <el-table-column
                           prop="trackID"
-                          label="工单号">
+                          label="工单号"
+                          width="140">
                         </el-table-column>
                         <el-table-column
                           prop="statusText"
-                          label="状态">
+                          label="状态"
+                          width="80">
                         </el-table-column>
                         <el-table-column
                           class-name="btn-wrap"
@@ -217,7 +223,7 @@ export default {
       // warningList: [{
       //   id: 1,
       //   failureLevel: 2,
-      //   time: '2018-09-12',
+      //   time: '2018-09-12 99:99:99',
       //   brandDesc: '奥克斯',
       //   device: 'ds-fre-43-f-fd',
       //   deviceName: '的丰富日光灯管防守打法',
@@ -229,7 +235,7 @@ export default {
       // }, {
       //   id: 2,
       //   failureLevel: 1,
-      //   time: '2018-09-12',
+      //   time: '2018-09-12 99:99:99',
       //   brandDesc: '奥克斯',
       //   device: 'ds-fre-43-f-fd',
       //   deviceName: '的丰富日光灯管防守打法',
@@ -240,8 +246,8 @@ export default {
       //   trackID: 'fdgrhtrhrthrt'
       // }, {
       //   id: 3,
-      //   failureLevel: 3,
-      //   time: '2018-09-12',
+      //   failureLevel: 6,
+      //   time: '2018-09-12 99:99:99',
       //   brandDesc: '奥克斯',
       //   device: 'ds-fre-43-f-fd',
       //   deviceName: '的丰富日光灯管防守打法',
@@ -452,8 +458,8 @@ body {
 .error-wrap {
   display: flex;
   flex-direction: column;
-  width: 1200px;
-  margin: 0 auto;
+  // width: 1200px;
+  margin: 0 30px;
   padding-top: 30px;
 
   > .rel {
@@ -545,7 +551,7 @@ body {
     .level-color1 {
       td {
         &:first-child {
-          color: #fff;
+          color: #000;
           background-color: #f00;
         }
       }
@@ -553,7 +559,7 @@ body {
     .level-color2 {
       td {
         &:first-child {
-          color: #fff;
+          color: #000;
           background-color: #64427d;
         }
       }
@@ -561,7 +567,7 @@ body {
     .level-color3 {
       td {
         &:first-child {
-          color: #fff;
+          color: #000;
           background-color: #ffc200;
         }
       }
@@ -569,7 +575,7 @@ body {
     .level-color4 {
       td {
         &:first-child {
-          color: #fff;
+          color: #000;
           background-color: #fbff00;
         }
       }
@@ -577,7 +583,7 @@ body {
     .level-color5 {
       td {
         &:first-child {
-          color: #fff;
+          color: #000;
           background-color: #4d98db;
         }
       }
@@ -585,7 +591,7 @@ body {
     .level-color6 {
       td {
         &:first-child {
-          color: #fff;
+          color: #000;
           background-color: #808080;
         }
       }
